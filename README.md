@@ -24,7 +24,7 @@ This is a module that includes one PCB:
 - MCU STM32F405
 - OLED display
 - Lipo charging chip
-- Save logging information to MicroSD card
+- Data loger - logging of received information to MicroSD
 
 The display is only needed to display service information, all telemetry is transmitted to a PC via USB to display telemetry in a GUI application, transmission of control commands for the "air device"
 
@@ -40,7 +40,7 @@ The display is only needed to display service information, all telemetry is tran
 
 This is a module that includes separate PCB modules for scalability:
 
-- TX module LoRa transceiver (E19-868M30S)  - 1W power output and MCU STM32F405, logging data to MicroSD card
+- TX module LoRa transceiver (E19-868M30S)  - 1W power output and MCU STM32F405, logging data to MicroSD card (black box)
 - GPS module and connectors 
 - IMU module ( acc, gyro, height (pressure) sensor )
 - "Servo module" - to control flight stabilization (MCU STM32F405)
