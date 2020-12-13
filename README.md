@@ -32,11 +32,17 @@ The display is only needed to display service information, all telemetry is tran
 
 This is a module that includes separate PCB modules for scalability:
 
-- TX module LoRa transceiver (E19-868M30S)  - 1W power output ) and MCU, logging data to MicroSD card
+- TX module LoRa transceiver (E19-868M30S)  - 1W power output and MCU STM32F405, logging data to MicroSD card
 - GPS module and connectors 
 - IMU module ( acc, gyro, height (pressure) sensor )
-- "Servo module" - to control flight stabilization
+- "Servo module" - to control flight stabilization (MCU STM32F405)
 - Power module - for power supply of all modules
+
+
+
+#### Receiver module block diagram
+
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/Telemetry-module-RX.png)
 
 ------
 
