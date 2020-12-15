@@ -28,6 +28,8 @@ This is a module that includes one PCB:
 
 The display is only needed to display service information, all telemetry is transmitted to a PC via USB to display telemetry in a GUI application, transmission of control commands for the "air device"
 
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/Ground_station.png)
+
 ------
 
 
@@ -40,11 +42,19 @@ The display is only needed to display service information, all telemetry is tran
 
 This is a module that includes separate PCB modules for scalability:
 
-- TX module LoRa transceiver (E19-868M30S)  - 1W power output and MCU STM32F405, logging data to MicroSD card (black box)
-- GPS module and connectors 
-- IMU module ( acc, gyro, height (pressure) sensor )
-- "Servo module" - to control flight stabilization (MCU STM32F405)
+- GPS module and SMA connectors 
+- MCU module: LoRa transceiver (E19-868M30S)  - 1W power output, MCU STM32F405, logging data to MicroSD card (black box)
+- IMU module ( acc, gyro, pressure, sensor )
+- Servo module - to control flight stabilization (MCU STM32F405)
 - Power module - for power supply of all modules
+
+
+
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/TX_assem.png)
+
+
+
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/TX.png)
 
 ------
 
