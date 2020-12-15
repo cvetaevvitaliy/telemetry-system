@@ -53,4 +53,20 @@ For details see [WiKi - Transmitting module (RX)](https://github.com/cvetaevvita
 
 ------
 
+## Releases
+
+[Open releases versions ](https://github.com/cvetaevvitaliy/telemetry-system/releases)
+
+------
+
+## Open Source / Contributors
+
+This software that is **open source** and is available free of charge without warranty to all users.
+
+Big thanks to current contributors:
+
+- 
+
+------
+
 *the document will be updated as the project develops
