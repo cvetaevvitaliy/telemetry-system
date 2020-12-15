@@ -28,7 +28,7 @@ This is a module that includes one PCB:
 
 The display is only needed to display service information, all telemetry is transmitted to a PC via USB to display telemetry in a GUI application, transmission of control commands for the rocket
 
-For details see [WiKi - Ground station (RX)](https://github.com/cvetaevvitaliy/telemetry-system/wiki/Transmitting-module-(TX))
+For details see [WiKi - Ground station (RX)](https://github.com/cvetaevvitaliy/telemetry-system/wiki/Ground-station-(RX))
 
 
 ------
