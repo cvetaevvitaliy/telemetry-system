@@ -50,11 +50,39 @@ This is a module that includes separate PCB modules for scalability:
 
 
 
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/TX.png)
+
+
+
 ![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/TX_assem.png)
 
 
 
-![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/TX.png)
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/GPS_module_2.png)
+
+
+
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/MCU_module_T.png)
+
+
+
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/MCU_module_B.png)
+
+
+
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/SERVO_module_T.png)
+
+
+
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/SERVO_module_B.png)
+
+
+
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/POWER_module_T.png)
+
+
+
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/POWER_module_B.png)
 
 ------
 
