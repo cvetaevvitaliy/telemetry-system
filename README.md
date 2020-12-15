@@ -28,9 +28,8 @@ This is a module that includes one PCB:
 
 The display is only needed to display service information, all telemetry is transmitted to a PC via USB to display telemetry in a GUI application, transmission of control commands for the rocket
 
-For details see 
+For details see [Ground station (RX) WiKi](https://github.com/cvetaevvitaliy/telemetry-system/wiki/Transmitting-module-(TX))
 
-[Ground station (RX) WiKi]: https://github.com/cvetaevvitaliy/telemetry-system/wiki/Ground-station-(RX)
 
 ------
 
@@ -50,9 +49,7 @@ This is a module that includes separate PCB modules for scalability:
 - Servo module - to control flight stabilization (MCU STM32F405)
 - Power module - for power supply of all modules
 
-For details see 
-
-[Ground station (RX) WiKi]: https://github.com/cvetaevvitaliy/telemetry-system/wiki/Transmitting-module-(TX)
+For details see [Ground station (RX) WiKi](https://github.com/cvetaevvitaliy/telemetry-system/wiki/Transmitting-module-(TX))
 
 ------
 
