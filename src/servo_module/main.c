@@ -1,3 +1,22 @@
+/*
+ * This file is part of "Telemetry system" project.
+ *
+ * "Telemetry system" are free software. You can redistribute
+ * this software and/or modify this software under the terms of the
+ * GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * "Telemetry system" are distributed in the hope that they
+ * will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
 #include "main.h"
 #include "stm32f4xx_hal.h"
 #include "usb_device.h"
@@ -120,7 +139,11 @@ void SystemClock_Config(void)
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-/* I2C2 init function */
+
+/**
+ * @brief  I2C2 init function
+ * @retval None
+ * */
 static void MX_I2C2_Init(void)
 {
 
@@ -140,7 +163,10 @@ static void MX_I2C2_Init(void)
 
 }
 
-/* SPI1 init function */
+/**
+ * @brief  SPI1 init function
+ * @retval None
+ * */
 static void MX_SPI1_Init(void)
 {
 
@@ -164,7 +190,10 @@ static void MX_SPI1_Init(void)
 
 }
 
-/* SPI2 init function */
+/**
+ * @brief  SPI2 init function
+ * @retval None
+ * */
 static void MX_SPI2_Init(void)
 {
 
@@ -188,7 +217,10 @@ static void MX_SPI2_Init(void)
 
 }
 
-/* SPI3 init function */
+/**
+ * @brief  SPI3 init function
+ * @retval None
+ * */
 static void MX_SPI3_Init(void)
 {
 
@@ -212,7 +244,10 @@ static void MX_SPI3_Init(void)
 
 }
 
-/* TIM1 init function */
+/**
+ * @brief  TIM1 init function
+ * @retval None
+ * */
 static void MX_TIM1_Init(void)
 {
 
@@ -266,7 +301,10 @@ static void MX_TIM1_Init(void)
 
 }
 
-/* TIM2 init function */
+/**
+  * @brief  TIM2 init function
+  * @retval None
+  */
 static void MX_TIM2_Init(void)
 {
 
@@ -303,7 +341,10 @@ static void MX_TIM2_Init(void)
 
 }
 
-/* TIM3 init function */
+/**
+  * @brief  TIM3 init function
+  * @retval None
+  */
 static void MX_TIM3_Init(void)
 {
 
@@ -340,7 +381,10 @@ static void MX_TIM3_Init(void)
 
 }
 
-/* TIM4 init function */
+/**
+  * @brief  TIM4 init function
+  * @retval None
+  */
 static void MX_TIM4_Init(void)
 {
 
@@ -377,7 +421,10 @@ static void MX_TIM4_Init(void)
 
 }
 
-/* TIM8 init function */
+/**
+  * @brief  TIM8 init function
+  * @retval None
+  */
 static void MX_TIM8_Init(void)
 {
 
@@ -442,7 +489,10 @@ static void MX_TIM8_Init(void)
 
 }
 
-/* USART2 init function */
+/**
+  * @brief  USART2 init function
+  * @retval None
+  */
 static void MX_USART2_UART_Init(void)
 {
 
@@ -461,7 +511,10 @@ static void MX_USART2_UART_Init(void)
 
 }
 
-/* USART3 init function */
+/**
+  * @brief  USART3 init function
+  * @retval None
+  */
 static void MX_USART3_UART_Init(void)
 {
 
@@ -480,9 +533,10 @@ static void MX_USART3_UART_Init(void)
 
 }
 
-/** 
-  * Enable DMA controller clock
-  */
+/**
+ * @brief  This is function for Enable DMA controller clock
+ * @retval None
+ * */
 static void MX_DMA_Init(void) 
 {
   /* DMA controller clock enable */
@@ -498,13 +552,17 @@ static void MX_DMA_Init(void)
 
 }
 
-/** Configure pins as 
-        * Analog 
-        * Input 
-        * Output
-        * EVENT_OUT
-        * EXTI
-*/
+
+/**
+ * @brief  This is function for Init  GPIO Pins
+ * @retval None
+ * @note Configure pins as:
+ *      * Analog
+ *      * Input
+ *      * Output
+ *      * EVENT_OUT
+ *      * EXTI
+ * */
 static void MX_GPIO_Init(void)
 {
 
@@ -560,7 +618,8 @@ static void MX_GPIO_Init(void)
   */
 void _Error_Handler(char *file, int line)
 {
-
+    /** Error_Handler_Debug */
+    /** Implementation to report the HAL error return state */
   while(1)
   {
 
