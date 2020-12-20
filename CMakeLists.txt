@@ -1,8 +1,29 @@
+####################################################################################################
+# This file is part of "Telemetry system" project.
+#
+# "Telemetry system" are free software. You can redistribute
+# this software and/or modify this software under the terms of the
+# GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option)
+# any later version.
+#
+# "Telemetry system" are distributed in the hope that they
+# will be useful, but WITHOUT ANY WARRANTY; without even the implied
+# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this software.
+#
+# If not, see <http://www.gnu.org/licenses/>.
+####################################################################################################
 SET(CMAKE_SYSTEM_NAME Generic)
 SET(CMAKE_SYSTEM_VERSION 1)
 cmake_minimum_required(VERSION 3.7)
 
 ####################################################################################################
+# Software version
+
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 1)
@@ -11,7 +32,25 @@ set(VERSION_FW "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 add_definitions(-DMINOR=\"${VERSION_MAJOR}\")
 add_definitions(-DMAJOR=\"${VERSION_MINOR}\")
 add_definitions(-DPATCH=\"${VERSION_PATCH}\")
+
 ####################################################################################################
+# Get git hash ang git branch name (please use definition in project GIT_HASH & GIT_BRANCH)
+
+# Git branch name
+execute_process(COMMAND git rev-parse --abbrev-ref HEAD COMMAND cut -c1-10 OUTPUT_VARIABLE GIT_BRANCH)
+string(STRIP ${GIT_BRANCH} GIT_BRANCH)
+message(STATUS "Git branch - ${GIT_BRANCH}")
+add_definitions(-DGIT_BRANCH=\"${GIT_BRANCH}\")
+
+# Git hash
+execute_process(COMMAND git rev-parse --short=8 HEAD OUTPUT_VARIABLE GIT_HASH)
+string(STRIP ${GIT_HASH} GIT_HASH)
+message(STATUS "Git hash - ${GIT_HASH}")
+add_definitions(-DGIT_HASH=\"${GIT_HASH}\")
+
+####################################################################################################
+# Set compiler todo: need refactor and set specific version of the compiler,
+# it is better to make CMake download and install it itself, in _toolchain folder in the project root
 
 SET(CMAKE_C_COMPILER arm-none-eabi-gcc)
 SET(CMAKE_CXX_COMPILER arm-none-eabi-g++)
@@ -21,23 +60,37 @@ set(CMAKE_OBJCOPY arm-none-eabi-objcopy)
 set(CMAKE_OBJDUMP arm-none-eabi-objdump)
 set(SIZE arm-none-eabi-size)
 
+####################################################################################################
+# Set linker script for linker
+
 SET(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32F405RGTx_FLASH.ld)
 
-#Uncomment for hardware floating point
+
+####################################################################################################
+# Float point: Software or Hardware
+
+# Hardware floating point
 SET(FPU_FLAGS "-mfloat-abi=hard -mfpu=fpv4-sp-d16")
 add_definitions(-DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING)
 
+# Software floating point
 #Uncomment for software floating point
 #SET(FPU_FLAGS "-mfloat-abi=soft")
+
+
+####################################################################################################
+# Specificity flag definition for ARM Cortex M4 MCU
 
 SET(COMMON_FLAGS
     "-mcpu=cortex-m4 ${FPU_FLAGS} -mthumb -mthumb-interwork -ffunction-sections -fdata-sections \
     -g -fno-common -fmessage-length=0 -specs=nosys.specs -specs=nano.specs")
 
+####################################################################################################
+# Specificity flag definition for ARM Cortex M4 MCU
+
 SET(CMAKE_CXX_FLAGS_INIT "${COMMON_FLAGS} -std=c++11")
 SET(CMAKE_C_FLAGS_INIT "${COMMON_FLAGS} -std=gnu99")
 SET(CMAKE_EXE_LINKER_FLAGS_INIT "-Wl,-gc-sections,--print-memory-usage -T ${LINKER_SCRIPT}")
-
 
 
 PROJECT(MCU_Module C CXX ASM)
@@ -47,6 +100,7 @@ SET(CMAKE_CXX_STANDARD 11)
 add_definitions(-D__weak=__attribute__\(\(weak\)\)
         -D__packed=__attribute__\(\(__packed__\)\)
         -DUSE_HAL_DRIVER -DSTM32F405xx)
+
 
 ####################################################################################################
 # STM HAL Library
@@ -103,6 +157,7 @@ SET(FAT_FS_SRC
 
 SET(FAT_FS_INC Middlewares/Third_Party/FatFs/src)
 
+
 ####################################################################################################
 # GROUND_STATION
 
@@ -142,6 +197,7 @@ add_custom_command(TARGET ${Ground_Station} POST_BUILD
         COMMENT "Building ${HEX_FILE_GROUND_STATION}
 Building ${BIN_FILE_GROUND_STATION}")
 
+
 ####################################################################################################
 # MCU_MODULE
 
@@ -180,6 +236,7 @@ add_custom_command(TARGET ${MCU_MODULE} POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${MCU_MODULE}> ${BIN_FILE_MCU_MODULE}
         COMMENT "Building ${HEX_FILE_MCU_MODULE}
 Building ${BIN_FILE_MCU_MODULE}")
+
 
 ####################################################################################################
 # SERVO_MODULE
