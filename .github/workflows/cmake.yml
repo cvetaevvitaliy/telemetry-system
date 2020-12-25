@@ -15,6 +15,8 @@ jobs:
       with:
          release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
     - run: cmake -E make_directory ${{runner.workspace}}/build
+    - run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+    - run: cmake --build . --config $BUILD_TYPE  
       
 #     - name: Configure CMake
 #       shell: bash
