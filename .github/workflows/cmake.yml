@@ -27,15 +27,20 @@ jobs:
       shell: bash
       run: pwd
       
-    - name: Configure CMake
-      shell: bash
+    - name: Cmake ..
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      shell: bash
+      run: cmake ..  
       
-    - name: Build
-      working-directory: ${{runner.workspace}}/build
-      shell: bash
-      run: cmake --build . --config $BUILD_TYPE
+#     - name: Configure CMake
+#       shell: bash
+#       working-directory: ${{runner.workspace}}/build
+#       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      
+#     - name: Build
+#       working-directory: ${{runner.workspace}}/build
+#       shell: bash
+#       run: cmake --build . --config $BUILD_TYPE
       
 #   test: # make sure the action works on a clean machine without building
 #     strategy:
