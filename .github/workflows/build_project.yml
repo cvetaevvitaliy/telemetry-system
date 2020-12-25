@@ -11,19 +11,15 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
           
-    - uses: actions/checkout@v2      
-    - name: Check folder 
-#      working-directory: ${{runner.workspace}}/telemetry-system
-      run: ls -l
+    - uses: actions/checkout@v2
       
     - name: Install git
       run: npm install git
+      
     - name: Download arm-none-eabi-gcc
       uses: fiam/arm-none-eabi-gcc@v1
       with:
-         release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
-    - run: arm-none-eabi-gcc --version
-    - run: which arm-none-eabi-gcc
+         release: '7-2018-q2'
       
     - name: Create Build folder
       run: cmake -E make_directory ${{runner.workspace}}/telemetry-system/build
@@ -31,7 +27,7 @@ jobs:
     - name: Configure CMake project
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
-      run: cmake ..
+      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
       
     - name: Build project 
       working-directory: ${{runner.workspace}}/telemetry-system/build
