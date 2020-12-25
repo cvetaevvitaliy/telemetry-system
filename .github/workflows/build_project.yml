@@ -39,14 +39,11 @@ jobs:
       shell: bash
       run: make
       
-    - uses: actions/download-artifact@v2
-      id: download
+    - name: Artifacts
+      uses: actions/upload-artifact@v2
       with:
-        name: 'my-artifact'
+        name: Artifacts
         path: ${{runner.workspace}}/telemetry-system/build
-
-    - name: 'Echo download path'
-      run: echo ${{steps.download.outputs.download-path}}
       
 
       
