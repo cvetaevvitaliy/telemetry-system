@@ -39,11 +39,17 @@ jobs:
       shell: bash
       run: make
       
-    - name: Artifacts
+    - name: Upload Artifacts HEX
       uses: actions/upload-artifact@v2
       with:
         name: "HEX"
         path: ${{runner.workspace}}/telemetry-system/build/*.hex
+        
+    - name: Upload Artifacts BIN
+      uses: actions/upload-artifact@v2
+      with:
+        name: "BIN"
+        path: ${{runner.workspace}}/telemetry-system/build/*.bin
       
 
       
