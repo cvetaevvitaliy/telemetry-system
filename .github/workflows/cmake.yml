@@ -18,13 +18,13 @@ jobs:
       
     - name: Configure CMake
       shell: bash
-      working-directory: ${{runner.workspace}}/build
-      run: cd build && cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+      working-directory: /build
       
     - name: Build
-      working-directory: ${{runner.workspace}}/build
       shell: bash
       run: make 
+      working-directory: /build
       
 #   test: # make sure the action works on a clean machine without building
 #     strategy:
