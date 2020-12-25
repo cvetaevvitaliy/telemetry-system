@@ -42,13 +42,8 @@ jobs:
     - name: Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: Artifacts
-        #path: ${{runner.workspace}}/telemetry-system/build
-        with:
-            - name: "HEX"
-              files: [ ${{runner.workspace}}/telemetry-system/build/*.hex ]
-            - name: "Bin"
-              files: [ ${{runner.workspace}}/telemetry-system/build/*.bin ]
+        name: "HEX"
+        path: ${{runner.workspace}}/telemetry-system/build/*.hex
       
 
       
