@@ -38,7 +38,7 @@ jobs:
         echo "CI_WORKFLOW=$CI_WORKFLOW"
         echo "CI_ACTION=$CI_ACTION"
           
-          
+    - uses: actions/checkout@v2      
     - name: Check folder 
 #      working-directory: ${{runner.workspace}}/telemetry-system
       run: ls -l
