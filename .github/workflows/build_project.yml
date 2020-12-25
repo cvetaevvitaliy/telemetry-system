@@ -37,7 +37,17 @@ jobs:
     - name: Build project 
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
-      run: make 
+      run: make
+      
+
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v2
+      with:
+        path: ${{runner.workspace}}/telemetry-system/build
+
+    - name: Display structure of downloaded files
+      run: ls -R
+      working-directory: ${{runner.workspace}}/telemetry-system/build
       
 
       
