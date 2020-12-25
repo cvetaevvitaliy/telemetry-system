@@ -1,0 +1,64 @@
+name: Build
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+on: [push]
+
+jobs:
+  build: # make sure build/ci work properly
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-18.04, macos-10.15]
+    runs-on: ${{ matrix.os }}
+#    runs-on: ubuntu-18.04
+    steps:
+          
+    - uses: actions/checkout@v2
+      
+    - name: Install git
+      run: npm install git
+      
+    - name: Download arm-none-eabi-gcc
+      uses: fiam/arm-none-eabi-gcc@v1
+      with:
+         release: '7-2018-q2'
+      
+    - name: Create Build folder
+      run: cmake -E make_directory ${{runner.workspace}}/telemetry-system/build
+      
+    - name: Configure CMake project
+      working-directory: ${{runner.workspace}}/telemetry-system/build
+      shell: bash
+      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+      
+    - name: Build project 
+      working-directory: ${{runner.workspace}}/telemetry-system/build
+      shell: bash
+      run: make
+      
+    - name: Upload Artifacts HEX
+      uses: actions/upload-artifact@v2
+      with:
+        name: "Download artifacts - HEX"
+        path: ${{runner.workspace}}/telemetry-system/build/*.hex
+        
+    - name: Upload Artifacts BIN
+      uses: actions/upload-artifact@v2
+      with:
+        name: "Download artifacts - BIN"
+        path: ${{runner.workspace}}/telemetry-system/build/*.bin
+      
+
+      
+#   test: # make sure the action works on a clean machine without building
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         os: [ubuntu-18.04, macos-10.15]
+#     name: Test @ ${{ matrix.os }}
+#     runs-on: ${{ matrix.os }}
+#     steps:
+#     - uses: actions/checkout@v2
