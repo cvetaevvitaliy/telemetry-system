@@ -26,15 +26,15 @@ jobs:
     - name: Create Build folder
       run: cmake -E make_directory ${{runner.workspace}}/telemetry-system/build
       
-    - name: Check working-directory 
+    - name: Cmake ..
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
-      run: pwd
+      run: cmake ..
       
-    - name: Cmake ..
-      working-directory: ${{runner.workspace}}/build
-      shell: bash
-      run: cmake ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+#     - name: Cmake ..
+#       working-directory: ${{runner.workspace}}/build
+#       shell: bash
+#       run: cmake ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       
 #     - name: Configure CMake
 #       shell: bash
