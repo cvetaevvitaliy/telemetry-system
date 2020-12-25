@@ -30,7 +30,7 @@ jobs:
     - name: Cmake ..
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake ${{runner.workspace}}/build ..
+      run: cmake ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       
 #     - name: Configure CMake
 #       shell: bash
