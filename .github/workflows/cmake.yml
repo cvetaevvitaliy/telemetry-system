@@ -10,22 +10,21 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-18.04
     steps:
-    - name: arm-none-eabi-gcc
+    - name: Download arm-none-eabi-gcc
       uses: fiam/arm-none-eabi-gcc@v1
       with:
          release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
     - run: cmake -E make_directory ${{runner.workspace}}/build
-    - run: cmake ..
       
-#     - name: Configure CMake
-#       shell: bash
-#       working-directory: ${{runner.workspace}}/build
-#       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{runner.workspace}}/build
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       
-#     - name: Build
-#       working-directory: ${{runner.workspace}}/build
-#       shell: bash
-#       run: cmake --build . --config $BUILD_TYPE
+    - name: Build
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
       
 #   test: # make sure the action works on a clean machine without building
 #     strategy:
