@@ -12,13 +12,20 @@ jobs:
     steps:
     - name: Install 
       run: npm install git
-    - name: Download arm-none-eabi-gcc
-      uses: fiam/arm-none-eabi-gcc@v1
-      with:
-         release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
+#     - name: Download arm-none-eabi-gcc
+#       uses: fiam/arm-none-eabi-gcc@v1
+#       with:
+#          release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
     - run: arm-none-eabi-gcc --version
     - run: which arm-none-eabi-gcc
-    - run: cmake -E make_directory ${{runner.workspace}}/build
+      
+    - name: Create Build folder
+      run: cmake -E make_directory ${{runner.workspace}}/build
+      
+    - name: Check working-directory 
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: pwd
       
     - name: Configure CMake
       shell: bash
