@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - name: Check folder 
-      working-directory: ${{runner.workspace}}/telemetry-system
+#      working-directory: ${{runner.workspace}}/telemetry-system
       run: ls -l
       
     - name: Install 
