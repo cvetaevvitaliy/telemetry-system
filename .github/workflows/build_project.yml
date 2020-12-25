@@ -42,13 +42,13 @@ jobs:
     - name: Upload Artifacts HEX
       uses: actions/upload-artifact@v2
       with:
-        name: "HEX"
+        name: "Download - HEX"
         path: ${{runner.workspace}}/telemetry-system/build/*.hex
         
     - name: Upload Artifacts BIN
       uses: actions/upload-artifact@v2
       with:
-        name: "BIN"
+        name: "Download - BIN"
         path: ${{runner.workspace}}/telemetry-system/build/*.bin
       
 
