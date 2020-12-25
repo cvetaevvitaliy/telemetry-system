@@ -11,9 +11,8 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - name: Check folder 
-      working-directory: ${{runner.workspace}}
+      working-directory: ${{runner.workspace}}/telemetry-system
       run: ls -l
-    - run: echo $(GITHUB_WORKFLOW)
       
     - name: Install 
       run: npm install git
@@ -25,10 +24,10 @@ jobs:
 #     - run: which arm-none-eabi-gcc
       
     - name: Create Build folder
-      run: cmake -E make_directory ${{runner.workspace}}/build
+      run: cmake -E make_directory ${{runner.workspace}}/telemetry-system/build
       
     - name: Check working-directory 
-      working-directory: ${{runner.workspace}}/build
+      working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
       run: pwd
       
