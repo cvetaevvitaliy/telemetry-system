@@ -10,6 +10,10 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-18.04
     steps:
+    - name: Check folder 
+      working-directory: ${{runner.workspace}}
+      run: ls -l
+      
     - name: Install 
       run: npm install git
 #     - name: Download arm-none-eabi-gcc
