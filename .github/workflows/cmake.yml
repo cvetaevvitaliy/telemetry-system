@@ -30,7 +30,7 @@ jobs:
     - name: Cmake ..
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake $GITHUB_WORKSPACE/build ..
+      run: cmake ${{runner.workspace}}/build ..
       
 #     - name: Configure CMake
 #       shell: bash
