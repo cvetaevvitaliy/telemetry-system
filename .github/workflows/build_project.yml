@@ -39,8 +39,6 @@ jobs:
       shell: bash
       run: make
       
-
-    - uses: actions/checkout@v2
     - uses: actions/download-artifact@v2
       with:
         path: ${{runner.workspace}}/telemetry-system/build
