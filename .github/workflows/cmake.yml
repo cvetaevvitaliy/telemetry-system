@@ -16,7 +16,7 @@ jobs:
 #      working-directory: ${{runner.workspace}}/telemetry-system
       run: ls -l
       
-    - name: Install 
+    - name: Install git
       run: npm install git
     - name: Download arm-none-eabi-gcc
       uses: fiam/arm-none-eabi-gcc@v1
@@ -28,10 +28,15 @@ jobs:
     - name: Create Build folder
       run: cmake -E make_directory ${{runner.workspace}}/telemetry-system/build
       
-    - name: Cmake ..
+    - name: Configure CMake project
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
       run: cmake ..
+      
+    - name: Build project 
+      working-directory: ${{runner.workspace}}/telemetry-system/build
+      shell: bash
+      run: make 
       
 #     - name: Cmake ..
 #       working-directory: ${{runner.workspace}}/build
