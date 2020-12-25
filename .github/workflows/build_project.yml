@@ -1,4 +1,4 @@
-name: CI
+name: Build
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -43,7 +43,12 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Artifacts
-        path: ${{runner.workspace}}/telemetry-system/build
+        #path: ${{runner.workspace}}/telemetry-system/build
+        with:
+            - name: "HEX"
+              files: [ ${{runner.workspace}}/telemetry-system/build/*.hex ]
+            - name: "Bin"
+              files: [ ${{runner.workspace}}/telemetry-system/build/*.bin ]
       
 
       
