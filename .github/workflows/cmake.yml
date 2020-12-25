@@ -10,34 +10,32 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
     - name: arm-none-eabi-gcc
     - uses: fiam/arm-none-eabi-gcc@v1
       with:
-        release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
-    - name: Create Build Environment
-      run: cmake -E make_directory ${{runner.workspace}}/build
+         release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
+    - run: cmake -E make_directory ${{runner.workspace}}/build
       
-    - name: Configure CMake
-      shell: bash
-      working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+#     - name: Configure CMake
+#       shell: bash
+#       working-directory: ${{runner.workspace}}/build
+#       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       
-    - name: Build
-      working-directory: ${{runner.workspace}}/build
-      shell: bash
-      run: cmake --build . --config $BUILD_TYPE
+#     - name: Build
+#       working-directory: ${{runner.workspace}}/build
+#       shell: bash
+#       run: cmake --build . --config $BUILD_TYPE
       
-  test: # make sure the action works on a clean machine without building
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    name: Test @ ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ./
-      with: 
-        release: 9-2020-q2
-    - run: arm-none-eabi-gcc -v
+#   test: # make sure the action works on a clean machine without building
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         os: [ubuntu-latest, macos-latest, windows-latest]
+#     name: Test @ ${{ matrix.os }}
+#     runs-on: ${{ matrix.os }}
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: ./
+#       with: 
+#         release: 9-2020-q2
+#     - run: arm-none-eabi-gcc -v
