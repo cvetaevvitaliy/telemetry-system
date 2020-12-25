@@ -14,17 +14,22 @@ jobs:
       uses: fiam/arm-none-eabi-gcc@v1
       with:
          release: '9-2019-q4' # The arm-none-eabi-gcc release to use.
+    - run: arm-none-eabi-gcc --version
+    - run: which arm-none-eabi-gcc
     - run: cmake -E make_directory ${{runner.workspace}}/build
+    - run: pwd
+    - run: echo ${{runner.workspace}}  
+    - run: ls -l
       
     - name: Configure CMake
+      working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
-      working-directory: /build
       
     - name: Build
+      working-directory: ${{runner.workspace}}/build
       shell: bash
       run: make 
-      working-directory: /build
       
 #   test: # make sure the action works on a clean machine without building
 #     strategy:
