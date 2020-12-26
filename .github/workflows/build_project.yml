@@ -1,4 +1,4 @@
-name: Build
+name: Build GitHub Cloud 
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
