@@ -22,10 +22,10 @@ jobs:
 #    - name: Install git
 #      run: npm install git
       
-    - name: Download arm-none-eabi-gcc
-      uses: fiam/arm-none-eabi-gcc@v1
-      with:
-         release: '7-2018-q2'
+#    - name: Download arm-none-eabi-gcc
+#      uses: fiam/arm-none-eabi-gcc@v1
+#      with:
+#         release: '7-2018-q2'
       
     - name: Create Build folder
       run: cmake -E make_directory ${{runner.workspace}}/telemetry-system/build
