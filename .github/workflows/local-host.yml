@@ -1,4 +1,4 @@
-name: Build GitHub Cloud 
+name: Local
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -8,24 +8,12 @@ on: [push]
 
 jobs:
   build: # make sure build/ci work properly
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-18.04, macos-10.15]
-    runs-on: ${{ matrix.os }}
-#    runs-on: ubuntu-18.04
+
+    runs-on: self-hosted
     steps:
           
     - uses: actions/checkout@v2
-      
-    - name: Install git
-      run: npm install git
-      
-    - name: Download arm-none-eabi-gcc
-      uses: fiam/arm-none-eabi-gcc@v1
-      with:
-         release: '7-2018-q2'
-      
+
     - name: Create Build folder
       run: cmake -E make_directory ${{runner.workspace}}/telemetry-system/build
       
@@ -37,7 +25,7 @@ jobs:
     - name: Build project 
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
-      run: make
+      run: make -j4
       
     - name: Upload Artifacts HEX
       uses: actions/upload-artifact@v2
@@ -50,15 +38,4 @@ jobs:
       with:
         name: "Download artifacts - BIN"
         path: ${{runner.workspace}}/telemetry-system/build/*.bin
-      
 
-      
-#   test: # make sure the action works on a clean machine without building
-#     strategy:
-#       fail-fast: false
-#       matrix:
-#         os: [ubuntu-18.04, macos-10.15]
-#     name: Test @ ${{ matrix.os }}
-#     runs-on: ${{ matrix.os }}
-#     steps:
-#     - uses: actions/checkout@v2
