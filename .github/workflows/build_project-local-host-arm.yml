@@ -1,4 +1,4 @@
-name: Build local ARM host
+name: Build local server
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
