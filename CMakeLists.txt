@@ -159,117 +159,111 @@ SET(FAT_FS_INC Middlewares/Third_Party/FatFs/src)
 
 
 ####################################################################################################
-# GROUND_STATION
+# Select build: SERVO_MODULE, MCU_MODULE or GROUND_STATION, please add to CMake config -DBUILD=<name>
 
-SET(GROUND_STATION_SRC
-        src/ground_station/main.c
-        src/ground_station/device/bsp_driver_sd.c
-        src/ground_station/device/fatfs.c
-        src/ground_station/device/sd_diskio.c
-        src/ground_station/device/stm32f4xx_hal_msp.c
-        src/ground_station/device/stm32f4xx_it.c
-        src/ground_station/device/system_stm32f4xx.c
-        src/ground_station/device/usb_device.c
-        src/ground_station/device/usbd_cdc_if.c
-        src/ground_station/device/usbd_conf.c
-        src/ground_station/device/usbd_desc.c)
+set(SELECT_BUILD GROUND_STATION MCU_MODULE SERVO_MODULE)
+SET(BUILD_NAME BUILD_NAME)
+foreach(TYPE ${SELECT_BUILD})
+#####################################################################################################
+## SERVO_MODULE
+    if (BUILD STREQUAL SERVO_MODULE)
+        message(SERVO_MODULE)
+        SET(BUILD_NAME SERVO_MODULE)
 
-SET(GROUND_STATION_INC
-        src/ground_station
-        src/ground_station/device)
+        SET(SRC_FILE
+                src/servo_module/main.c
+                src/servo_module/device/stm32f4xx_hal_msp.c
+                src/servo_module/device/stm32f4xx_it.c
+                src/servo_module/device/system_stm32f4xx.c
+                src/servo_module/device/usb_device.c
+                src/servo_module/device/usbd_cdc_if.c
+                src/servo_module/device/usbd_conf.c
+                src/servo_module/device/usbd_desc.c)
 
-SET(Ground_Station GROUND_STATION)
-
-add_executable (${Ground_Station} ${STM32_HAL_SRC} ${FAT_FS_SRC} ${GROUND_STATION_SRC} ${LINKER_SCRIPT})
-target_include_directories(${Ground_Station} PRIVATE ${STM32_HAL_INC} ${FAT_FS_INC} ${GROUND_STATION_INC})
-
-
-SET(CMAKE_EXE_LINKER_FLAGS
-    "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${PROJECT_BINARY_DIR}/${Ground_Station}.map ${FPU_FLAGS}")
-
-SET(HEX_FILE_GROUND_STATION ${PROJECT_BINARY_DIR}/${Ground_Station}.hex)
-SET(BIN_FILE_GROUND_STATION ${PROJECT_BINARY_DIR}/${Ground_Station}.bin)
-
-add_custom_command(TARGET ${Ground_Station} POST_BUILD
-        COMMAND ${SIZE} --format=berkeley ${Ground_Station}
-        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${Ground_Station}> ${HEX_FILE_GROUND_STATION}
-        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${Ground_Station}> ${BIN_FILE_GROUND_STATION}
-        COMMENT "Building ${HEX_FILE_GROUND_STATION}
-Building ${BIN_FILE_GROUND_STATION}")
+        SET(INC_FILE
+                src/servo_module
+                src/servo_module/device)
 
 
-####################################################################################################
-# MCU_MODULE
+#####################################################################################################
+## MCU_MODULE
+    elseif(BUILD STREQUAL MCU_MODULE)
+        message(MCU_MODULE)
+        SET(BUILD_NAME MCU_MODULE)
 
-SET(MCU_MODULE MCU_MODULE)
+        SET(SRC_FILE
+                Middlewares/Third_Party/FatFs/src/option/syscall.c
+                Middlewares/Third_Party/FatFs/src/diskio.c
+                Middlewares/Third_Party/FatFs/src/ff.c
+                Middlewares/Third_Party/FatFs/src/ff_gen_drv.c
 
-SET(MCU_MODULE_SRC
-        src/mcu_module/main.c
-        src/mcu_module/device/bsp_driver_sd.c
-        src/mcu_module/device/fatfs.c
-        src/mcu_module/device/sd_diskio.c
-        src/mcu_module/device/stm32f4xx_hal_msp.c
-        src/mcu_module/device/stm32f4xx_it.c
-        src/mcu_module/device/system_stm32f4xx.c
-        src/mcu_module/device/usb_device.c
-        src/mcu_module/device/usbd_cdc_if.c
-        src/mcu_module/device/usbd_conf.c
-        src/mcu_module/device/usbd_desc.c)
+                src/mcu_module/main.c
+                src/mcu_module/device/bsp_driver_sd.c
+                src/mcu_module/device/fatfs.c
+                src/mcu_module/device/sd_diskio.c
+                src/mcu_module/device/stm32f4xx_hal_msp.c
+                src/mcu_module/device/stm32f4xx_it.c
+                src/mcu_module/device/system_stm32f4xx.c
+                src/mcu_module/device/usb_device.c
+                src/mcu_module/device/usbd_cdc_if.c
+                src/mcu_module/device/usbd_conf.c
+                src/mcu_module/device/usbd_desc.c)
 
-SET(MCU_MODULE_INC
-        src/mcu_module
-        src/mcu_module/device)
+        SET(INC_FILE
+                Middlewares/Third_Party/FatFs/src
 
-add_executable(${MCU_MODULE} ${STM32_HAL_SRC} ${FAT_FS_SRC} ${MCU_MODULE_SRC} ${LINKER_SCRIPT})
-target_include_directories(${MCU_MODULE} PRIVATE ${STM32_HAL_INC} ${FAT_FS_INC} ${MCU_MODULE_INC})
+                src/mcu_module
+                src/mcu_module/device)
 
+#####################################################################################################
+## GROUND_STATION
+    else() # This is default build target
+        message(GROUND_STATION)
+        SET(BUILD_NAME GROUND_STATION)
 
-SET(CMAKE_EXE_LINKER_FLAGS
-        "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${PROJECT_BINARY_DIR}/${MCU_MODULE}.map ${FPU_FLAGS}")
+        SET(SRC_FILE
+                Middlewares/Third_Party/FatFs/src/option/syscall.c
+                Middlewares/Third_Party/FatFs/src/diskio.c
+                Middlewares/Third_Party/FatFs/src/ff.c
+                Middlewares/Third_Party/FatFs/src/ff_gen_drv.c
 
-SET(HEX_FILE_MCU_MODULE ${PROJECT_BINARY_DIR}/${MCU_MODULE}.hex)
-SET(BIN_FILE_MCU_MODULE ${PROJECT_BINARY_DIR}/${MCU_MODULE}.bin)
+                src/ground_station/main.c
+                src/ground_station/device/bsp_driver_sd.c
+                src/ground_station/device/fatfs.c
+                src/ground_station/device/sd_diskio.c
+                src/ground_station/device/stm32f4xx_hal_msp.c
+                src/ground_station/device/stm32f4xx_it.c
+                src/ground_station/device/system_stm32f4xx.c
+                src/ground_station/device/usb_device.c
+                src/ground_station/device/usbd_cdc_if.c
+                src/ground_station/device/usbd_conf.c
+                src/ground_station/device/usbd_desc.c)
 
-add_custom_command(TARGET ${MCU_MODULE} POST_BUILD
-        COMMAND ${SIZE} --format=berkeley ${MCU_MODULE}
-        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${MCU_MODULE}> ${HEX_FILE_MCU_MODULE}
-        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${MCU_MODULE}> ${BIN_FILE_MCU_MODULE}
-        COMMENT "Building ${HEX_FILE_MCU_MODULE}
-Building ${BIN_FILE_MCU_MODULE}")
+        SET(INC_FILE
+                Middlewares/Third_Party/FatFs/src
 
+                src/ground_station
+                src/ground_station/device)
+    endif()
+endforeach()
+#####################################################################################################
 
-####################################################################################################
-# SERVO_MODULE
-
-SET(SERVO_MODULE SERVO_MODULE)
-
-SET(SERVO_MODULE_SRC
-        src/servo_module/main.c
-        src/servo_module/device/stm32f4xx_hal_msp.c
-        src/servo_module/device/stm32f4xx_it.c
-        src/servo_module/device/system_stm32f4xx.c
-        src/servo_module/device/usb_device.c
-        src/servo_module/device/usbd_cdc_if.c
-        src/servo_module/device/usbd_conf.c
-        src/servo_module/device/usbd_desc.c)
-
-SET(SERVO_MODULE_INC
-        src/servo_module
-        src/servo_module/device)
-
-add_executable(${SERVO_MODULE} ${STM32_HAL_SRC} ${SERVO_MODULE_SRC} ${LINKER_SCRIPT})
-target_include_directories(${SERVO_MODULE} PRIVATE ${STM32_HAL_INC} ${SERVO_MODULE_INC})
+add_executable (${BUILD_NAME} ${STM32_HAL_SRC} ${SRC_FILE} ${LINKER_SCRIPT})
+target_include_directories(${BUILD_NAME} PRIVATE ${STM32_HAL_INC} ${INC_FILE})
 
 
 SET(CMAKE_EXE_LINKER_FLAGS
-        "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${PROJECT_BINARY_DIR}/${SERVO_MODULE}.map ${FPU_FLAGS}")
+    "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${PROJECT_BINARY_DIR}/${BUILD_NAME}-V${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}-${GIT_HASH}.map ${FPU_FLAGS}")
 
-SET(HEX_FILE_SERVO_MODULE ${PROJECT_BINARY_DIR}/${SERVO_MODULE}.hex)
-SET(BIN_FILE_SERVO_MODULE ${PROJECT_BINARY_DIR}/${SERVO_MODULE}.bin)
+SET(HEX_FILE ${PROJECT_BINARY_DIR}/${BUILD_NAME}-V${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}-${GIT_HASH}.hex)
+SET(BIN_FILE ${PROJECT_BINARY_DIR}/${BUILD_NAME}-V${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}-${GIT_HASH}.bin)
 
-add_custom_command(TARGET ${SERVO_MODULE} POST_BUILD
-        COMMAND ${SIZE} --format=berkeley ${SERVO_MODULE}
-        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${SERVO_MODULE}> ${HEX_FILE_SERVO_MODULE}
-        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${SERVO_MODULE}> ${BIN_FILE_SERVO_MODULE}
-        COMMENT "Building ${HEX_FILE_SERVO_MODULE}
-Building ${BIN_FILE_SERVO_MODULE}")
+add_custom_command(TARGET ${BUILD_NAME} POST_BUILD
+        COMMAND arm-none-eabi-size --format=berkeley ${BUILD_NAME}
+        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${BUILD_NAME}> ${HEX_FILE}
+        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${BUILD_NAME}> ${BIN_FILE}
+        COMMENT "Building done, output files:
+${HEX_FILE}
+${BIN_FILE}
+File details, format berkeley:")
+#####################################################################################################

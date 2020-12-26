@@ -56,3 +56,5 @@ dkms.conf
 cmake-build-debug/
 cmake-build-release/
 build/
+cmake-build-*/
+cmake-build-*/

@@ -16,17 +16,51 @@ jobs:
 
     - name: Create Build folder
       run: cmake -E make_directory ${{runner.workspace}}/telemetry-system/build
-      
-    - name: Configure CMake project
+
+    - name: Configure CMake project - Build GROUND STATION
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
-      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
-      
-    - name: Build project 
+      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD=GROUND_STATION ..
+
+    - name: Build GROUND STATION
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
-      run: make -j4
-      
+      run: make -j8
+
+    - name: Clean
+      working-directory: ${{runner.workspace}}/telemetry-system/build
+      shell: bash
+      run: make clean
+
+    - name: Configure CMake project - Build MCU MODULE
+      working-directory: ${{runner.workspace}}/telemetry-system/build
+      shell: bash
+      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD=MCU_MODULE ..
+
+    - name: Build MCU MODULE
+      working-directory: ${{runner.workspace}}/telemetry-system/build
+      shell: bash
+      run: make -j8
+
+    - name: Clean
+      working-directory: ${{runner.workspace}}/telemetry-system/build
+      shell: bash
+      run: make clean
+
+    - name: Configure CMake project - Build SERVO MODULE
+      working-directory: ${{runner.workspace}}/telemetry-system/build
+      shell: bash
+      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD=SERVO_MODULE ..
+
+    - name: Build SERVO MODULE
+      working-directory: ${{runner.workspace}}/telemetry-system/build
+      shell: bash
+      run: make -j8
+
+    - name: Clean
+      working-directory: ${{runner.workspace}}/telemetry-system/build
+      shell: bash
+      run: make clean
     - name: Upload Artifacts HEX
       uses: actions/upload-artifact@v2
       with:
