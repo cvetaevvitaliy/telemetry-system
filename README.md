@@ -1,4 +1,4 @@
-# Telemetry System  <div align="right"> ![Local-build](https://github.com/cvetaevvitaliy/telemetry-system/workflows/Local/badge.svg) ![Cloud-build](https://github.com/cvetaevvitaliy/telemetry-system/workflows/Cloud/badge.svg) </div>
+# Telemetry System  <div align="right"> ![Cloud-build](https://github.com/cvetaevvitaliy/telemetry-system/workflows/Cloud-build/badge.svg) ![Local-build](https://github.com/cvetaevvitaliy/telemetry-system/workflows/Local-build/badge.svg) </div>
 This is a project for transmitting telemetry for a balloon, rocket and other things that can fly high. <br>
 
 ------
