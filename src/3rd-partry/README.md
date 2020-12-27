@@ -24,6 +24,19 @@ Uses ~2Kb Flash memory, ~1Kb RAM memory
  ┗ 📄 cli_io.h           - add input/outpur charaters fom/in IO stream
 ```
 
+For add new command to CLI, need call function `cli_add_new_cmd` <br>
+
+Where 
+```
+ * @param name      - input name commands
+ * @param fcn       - callback execute function
+ * @param argc      - min count arguments
+ * @param mode      - execute mode, see CLI_Type_Mode_Cmd_t struc 
+ * @param descr     - description
+ * @return result   - append command
+
+cli_add_new_cmd (const char* name, uint8_t (*fcn)(), uint8_t argc, CLI_Type_Mode_Cmd_t mode, const char* descr);
+```
 ------
 
 ### Helper library
