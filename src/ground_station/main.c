@@ -23,6 +23,8 @@
 #include "fatfs.h"
 #include "usb_device.h"
 
+#include "cli.h"
+
 I2C_HandleTypeDef hi2c1;
 
 RTC_HandleTypeDef hrtc;
@@ -65,6 +67,7 @@ int main(void)
   MX_FATFS_Init();
   MX_RTC_Init();
   MX_USB_DEVICE_Init();
+  cli_init();
 
   while (1)
   {

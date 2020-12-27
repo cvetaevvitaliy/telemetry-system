@@ -31,7 +31,7 @@ jobs:
     - name: Configure CMake project - Build GROUND STATION
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
-      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD=GROUND_STATION ..
+      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -D_WHERE_BUILD=Cloud -DBUILD=GROUND_STATION ..
       
     - name: Build GROUND STATION
       working-directory: ${{runner.workspace}}/telemetry-system/build
@@ -46,7 +46,7 @@ jobs:
     - name: Configure CMake project - Build MCU MODULE
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
-      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD=MCU_MODULE ..
+      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -D_WHERE_BUILD=Cloud -DBUILD=MCU_MODULE ..
 
     - name: Build MCU MODULE
       working-directory: ${{runner.workspace}}/telemetry-system/build
@@ -61,7 +61,7 @@ jobs:
     - name: Configure CMake project - Build SERVO MODULE
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
-      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD=SERVO_MODULE ..
+      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -D_WHERE_BUILD=Cloud -DBUILD=SERVO_MODULE ..
 
     - name: Build SERVO MODULE
       working-directory: ${{runner.workspace}}/telemetry-system/build
