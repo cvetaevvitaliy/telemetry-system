@@ -83,7 +83,7 @@ add_definitions(-DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING)
 
 SET(COMMON_FLAGS
     "-mcpu=cortex-m4 ${FPU_FLAGS} -mthumb -mthumb-interwork -ffunction-sections -fdata-sections \
-    -g -fno-common -fmessage-length=0 -specs=nosys.specs -specs=nano.specs")
+    -O3 -g3 -fno-common -fmessage-length=0 -specs=nosys.specs -specs=nano.specs")
 
 ####################################################################################################
 # Specificity flag definition for ARM Cortex M4 MCU
@@ -220,6 +220,7 @@ foreach(TYPE ${SELECT_BUILD})
     else() # This is default build target
         message(GROUND_STATION)
         SET(BUILD_NAME GROUND_STATION)
+        add_definitions(-DBUILD_NAME=\"GROUND\ STATION\")
 
         SET(SRC_FILE
                 Middlewares/Third_Party/FatFs/src/option/syscall.c
@@ -237,16 +238,46 @@ foreach(TYPE ${SELECT_BUILD})
                 src/ground_station/device/usb_device.c
                 src/ground_station/device/usbd_cdc_if.c
                 src/ground_station/device/usbd_conf.c
-                src/ground_station/device/usbd_desc.c)
+                src/ground_station/device/usbd_desc.c
+
+                ####################################################################################################
+                # Device source codes
+
+                src/3rd-partry/helper-library/tinyprintf/tinyprintf.c
+                src/3rd-partry/helper-library/tinystring/tinystring.c
+
+                src/3rd-partry/cli/lib/cli_input.c
+                src/3rd-partry/cli/lib/cli_log.c
+                src/3rd-partry/cli/lib/cli_queue.c
+                src/3rd-partry/cli/lib/cli_time.c
+                src/3rd-partry/cli/cli_io.c
+                src/3rd-partry/cli/cli.c)
+                ####################################################################################################
 
         SET(INC_FILE
                 Middlewares/Third_Party/FatFs/src
 
                 src/ground_station
-                src/ground_station/device)
+                src/ground_station/device
+
+                ####################################################################################################
+                # Device include directories
+
+                src/3rd-partry/helper-library/tinyprintf
+                src/3rd-partry/helper-library/tinystring
+
+                src/3rd-partry/cli
+                src/3rd-partry/cli/lib)
     endif()
 endforeach()
 #####################################################################################################
+
+#_WHERE_BUILD
+if (_WHERE_BUILD STREQUAL Cloud)
+    add_definitions(-D_WHERE_BUILD=\"Cloud\ build\")
+else()
+    add_definitions(-D_WHERE_BUILD=\"Local\ build\")
+endif()
 
 add_executable (${BUILD_NAME} ${STM32_HAL_SRC} ${SRC_FILE} ${LINKER_SCRIPT})
 target_include_directories(${BUILD_NAME} PRIVATE ${STM32_HAL_INC} ${INC_FILE})
