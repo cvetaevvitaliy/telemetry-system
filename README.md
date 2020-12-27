@@ -16,7 +16,7 @@ The project consists of:
 
 #### Block diagram
 
-![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/Ground-station.png)
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/master/doc/pic/Ground-station.png)
 
 This is a module that includes one PCB:
 
@@ -39,7 +39,7 @@ For details see [WiKi - Ground station (RX)](https://github.com/cvetaevvitaliy/t
 
 #### Block diagram
 
-![](https://github.com/cvetaevvitaliy/telemetry-system/blob/main/doc/pic/Telemetry-module-RX.png)
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/master/doc/pic/Telemetry-module-RX.png)
 
 This is a module that includes separate PCB modules for scalability:
 
