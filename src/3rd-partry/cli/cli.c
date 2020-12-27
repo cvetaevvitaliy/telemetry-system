@@ -391,7 +391,7 @@ bool cli_loop_service()
  * @param descr - description
  * @return result append command
 * */
-CLI_Add_Result_t cli_add_new_cmd(const char *name, uint8_t (*fcn)(), uint8_t argc, uint16_t mode, const char *descr)
+CLI_Add_Result_t cli_add_new_cmd(const char *name, uint8_t (*fcn)(), uint8_t argc, CLI_Type_Mode_Cmd_t mode, const char *descr)
 {
 
     if (CLI_State_s.countCommand >= CLI_SIZE_MAX_CMD) {
