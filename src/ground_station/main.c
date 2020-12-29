@@ -22,6 +22,7 @@
 #include "stm32f4xx_hal.h"
 #include "fatfs.h"
 #include "usb_device.h"
+#include "cli.h"
 
 I2C_HandleTypeDef hi2c1;
 
@@ -65,9 +66,11 @@ int main(void)
   MX_FATFS_Init();
   MX_RTC_Init();
   MX_USB_DEVICE_Init();
+  cli_init();
 
   while (1)
   {
+      cli_loop_service();
 
 
   }

@@ -36,7 +36,8 @@
 #include "stm32f4xx_it.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "usbd_cdc_if.h"
+#include "cli.h"
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -181,10 +182,18 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
+    static uint32_t tv;
+    tv++;
 
+    if (tv > 100){
+        CDC_SEND_BUFF();
+        tv = 0;
+
+    }
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   HAL_SYSTICK_IRQHandler();
+  SysTick_CLI();
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */

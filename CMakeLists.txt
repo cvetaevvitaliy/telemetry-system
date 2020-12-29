@@ -99,7 +99,7 @@ SET(CMAKE_CXX_STANDARD 11)
 
 add_definitions(-D__weak=__attribute__\(\(weak\)\)
         -D__packed=__attribute__\(\(__packed__\)\)
-        -DUSE_HAL_DRIVER -DSTM32F405xx)
+        -DUSE_HAL_DRIVER -DSTM32F405xx -DMCU=\"STM32F405RG\")
 
 
 ####################################################################################################

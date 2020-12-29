@@ -42,7 +42,7 @@ void CLI_AppendChar(char c)
 /** Your implementation of sending a character to IO stream */
 void CLI_PrintChar(char c)
 {
-    //CDC_Transmit_SET_BUFF(c);
+    CDC_Transmit_SET_BUFF(c);
 }
 
 void CLI_PrintStr(char *str)
