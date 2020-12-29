@@ -251,7 +251,9 @@ foreach(TYPE ${SELECT_BUILD})
                 src/3rd-partry/cli/lib/cli_queue.c
                 src/3rd-partry/cli/lib/cli_time.c
                 src/3rd-partry/cli/cli_io.c
-                src/3rd-partry/cli/cli.c)
+                src/3rd-partry/cli/cli.c
+
+                src/ground_station/pcb_test.c)
                 ####################################################################################################
 
         SET(INC_FILE

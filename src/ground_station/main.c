@@ -68,6 +68,8 @@ int main(void)
   MX_USB_DEVICE_Init();
   cli_init();
 
+  add_test_cli_cmd();
+
   while (1)
   {
       cli_loop_service();
@@ -344,7 +346,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, LED_1_Pin|LED_2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, LED_1_Pin|LED_2_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, E19_RST_Pin|E19_TX_Pin|E19_RX_Pin, GPIO_PIN_RESET);

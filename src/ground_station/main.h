@@ -77,6 +77,8 @@
   */
 /* #define USE_FULL_ASSERT    1U */
 
+void add_test_cli_cmd(void);
+
 #ifdef __cplusplus
  extern "C" {
 #endif
