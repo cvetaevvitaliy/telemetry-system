@@ -44,6 +44,7 @@
 #include <stdlib.h>
 #include "cli.h"
 #include "cli_io.h"
+#include "cli_time.h"
 
 
 // ****************************** Code keys ********************************
@@ -133,10 +134,16 @@ extern char output_print_buffer[128];
 // ***********************   IO Debug CLI Settings    ***********************
 
 /**< This macro for debug software */
-#if (DEBUG == 1)
+#if (DEBUG == 1) // todo: need implement LOG LEVEL : 3 - Debug, 2 - Info, 1 - Error, 0 - Nothing print in console
+#if (DEBUG_TIMESTAMP == 1)
+#define LOG_DEBUG(f_, ...)                      CLI_PRINTF(("\n%s [DEBUG] "f_), cli_time_get_curr_time_str(), ##__VA_ARGS__)
+#define LOG_INFO(f_, ...)                       CLI_PRINTF(("\n%s [INFO] "f_), cli_time_get_curr_time_str(), ##__VA_ARGS__)
+#define LOG_ERROR(f_, ...)                      CLI_PRINTF(("\n%s [ERROR] "f_), cli_time_get_curr_time_str(), ##__VA_ARGS__)
+#else
 #define LOG_DEBUG(f_, ...)                      CLI_PRINTF(("\n[DEBUG] "f_), ##__VA_ARGS__)
 #define LOG_INFO(f_, ...)                       CLI_PRINTF(("\n[INFO] "f_), ##__VA_ARGS__)
 #define LOG_ERROR(f_, ...)                      CLI_PRINTF(("\n[ERROR] "f_), ##__VA_ARGS__)
+#endif
 #else
 #define LOG_DEBUG(f_, ...)
 #define LOG_INFO(f_, ...)

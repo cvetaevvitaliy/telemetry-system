@@ -1,7 +1,7 @@
 #include "main.h"
 #include "cli.h"
 
-static uint8_t test_led(void);
+static CLI_Result_t test_led(void);
 
 void add_test_cli_cmd(void)
 {
@@ -19,8 +19,7 @@ void add_test_cli_cmd(void)
 }
 
 
-
-uint8_t test_led(void)
+CLI_Result_t test_led(void)
 {
     uint8_t value;
     uint8_t argv_0 = cli_get_arg_dec (0);
@@ -30,9 +29,9 @@ uint8_t test_led(void)
     }
 
     if (argv_0)
-        HAL_GPIO_WritePin(LED_2_GPIO_Port, LED_2_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(LED_1_GPIO_Port, LED_1_Pin, GPIO_PIN_RESET);
     else
-        HAL_GPIO_WritePin(LED_2_GPIO_Port, LED_2_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(LED_1_GPIO_Port, LED_1_Pin, GPIO_PIN_SET);
 
     return CLI_OK;
 }

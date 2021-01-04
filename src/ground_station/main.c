@@ -23,6 +23,8 @@
 #include "fatfs.h"
 #include "usb_device.h"
 #include "cli.h"
+#include "bq2589x_charger.h"
+#include "range_test.h"
 
 I2C_HandleTypeDef hi2c1;
 
@@ -33,6 +35,7 @@ SD_HandleTypeDef hsd;
 SPI_HandleTypeDef hspi1;
 
 TIM_HandleTypeDef htim1;
+TIM_HandleTypeDef htim10;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -46,6 +49,8 @@ static void MX_TIM1_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_RTC_Init(void);
+void USB_Reset_GPIO(void);
+static void TIMER10_Init(void);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
@@ -65,15 +70,35 @@ int main(void)
   MX_USART2_UART_Init();
   MX_FATFS_Init();
   MX_RTC_Init();
-  MX_USB_DEVICE_Init();
-  cli_init();
 
+  bq2589x_init_device();
+  bq2589x_exit_ship_mode();
+  bq2589x_exit_hiz_mode();
+  bq2589x_set_charge_current(2000);
+  bq2589x_adc_start(0);
+  bq2589x_set_prechg_current(1024);
+  bq2589x_set_bat_limit(2800);
+  bq2589x_set_chargevoltage(4200);
+  bq2589x_set_term_current(150);
+  bq2589x_enable_max_charge(true);
+  bq2589x_enable_charger();
+
+  USB_Reset_GPIO();
+  MX_USB_DEVICE_Init();
+
+  cli_init();
   add_test_cli_cmd();
+
+  TIMER10_Init();
+  HAL_TIM_Base_Start_IT(&htim10);
+
+  RangeTest_Init();
 
   while (1)
   {
-      cli_loop_service();
+      RangeTest_Execute();
 
+      cli_loop_service();
 
   }
 
@@ -202,23 +227,22 @@ static void MX_SDIO_SD_Init(void)
 static void MX_SPI1_Init(void)
 {
 
-  /* SPI1 parameter configuration*/
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_HARD_OUTPUT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
+    /* SPI1 parameter configuration*/
+    hspi1.Instance = SPI1;
+    hspi1.Init.Mode = SPI_MODE_MASTER;
+    hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+    hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+    hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+    hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+    hspi1.Init.NSS = SPI_NSS_SOFT;
+    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+    hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+    hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+    hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+    hspi1.Init.CRCPolynomial = 10;
+    if (HAL_SPI_Init(&hspi1) != HAL_OK) {
+        _Error_Handler(__FILE__, __LINE__);
+    }
 
 }
 
@@ -288,6 +312,18 @@ static void MX_TIM1_Init(void)
 
 }
 
+static void TIMER10_Init(void)
+{
+    htim10.Instance = TIM10;
+    htim10.Init.Prescaler = (uint16_t) (SystemCoreClock / 100) - 1;
+    htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
+    htim10.Init.Period = 100;
+    htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    if (HAL_TIM_Base_Init(&htim10) != HAL_OK) {
+        _Error_Handler(__FILE__, __LINE__);
+    }
+}
+
 /* USART1 init function */
 static void MX_USART1_UART_Init(void)
 {
@@ -336,96 +372,89 @@ static void MX_USART2_UART_Init(void)
 static void MX_GPIO_Init(void)
 {
 
-  GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitTypeDef GPIO_InitStruct;
 
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
+    /* GPIO Ports Clock Enable */
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOH_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOD_CLK_ENABLE();
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, LED_1_Pin|LED_2_Pin, GPIO_PIN_SET);
+    /*Configure GPIO pin Output Level */
+    HAL_GPIO_WritePin(GPIOC, LED_1_Pin | LED_2_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, E19_RST_Pin|E19_TX_Pin|E19_RX_Pin, GPIO_PIN_RESET);
+    /*Configure GPIO pin Output Level */
+    HAL_GPIO_WritePin(GPIOB, E19_RST_Pin | E19_TX_Pin | E19_RX_Pin | LCD_RESET_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(USB_RESET_GPIO_Port, USB_RESET_Pin, GPIO_PIN_RESET);
+    /*Configure GPIO pin Output Level */
+    HAL_GPIO_WritePin(GPIOA, USB_RESET_Pin|SPI1_CS_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_1_Pin LED_2_Pin */
-  GPIO_InitStruct.Pin = LED_1_Pin|LED_2_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = SPI1_CS_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : E19_DIO_0_Pin E19_DIO_1_Pin */
-  GPIO_InitStruct.Pin = E19_DIO_0_Pin|E19_DIO_1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    /*Configure GPIO pins : LED_1_Pin LED_2_Pin */
+    GPIO_InitStruct.Pin = LED_1_Pin | LED_2_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : E19_DIO_2_Pin E19_DIO_3_Pin E19_DIO_4_Pin E19_DIO_5_Pin */
-  GPIO_InitStruct.Pin = E19_DIO_2_Pin|E19_DIO_3_Pin|E19_DIO_4_Pin|E19_DIO_5_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    /*Configure GPIO pins : E19_RST_Pin E19_TX_Pin E19_RX_Pin */
+    GPIO_InitStruct.Pin = E19_RST_Pin | E19_TX_Pin | E19_RX_Pin | LCD_RESET_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : E19_RST_Pin E19_TX_Pin E19_RX_Pin */
-  GPIO_InitStruct.Pin = E19_RST_Pin|E19_TX_Pin|E19_RX_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    /*Configure GPIO pins : BUTTON_RIGHT_Pin BUTTON_LEFT_Pin BUTTON_SELECT_Pin */
+    GPIO_InitStruct.Pin = BUTTON_RIGHT_Pin | BUTTON_LEFT_Pin | BUTTON_SELECT_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : BUTTON_RIGHT_Pin BUTTON_LEFT_Pin BUTTON_SELECT_Pin */
-  GPIO_InitStruct.Pin = BUTTON_RIGHT_Pin|BUTTON_LEFT_Pin|BUTTON_SELECT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    /*Configure GPIO pins : BUTTON_DOWN_Pin BUTTON_UP_Pin */
+    GPIO_InitStruct.Pin = BUTTON_DOWN_Pin | BUTTON_UP_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : BUTTON_DOWN_Pin BUTTON_UP_Pin */
-  GPIO_InitStruct.Pin = BUTTON_DOWN_Pin|BUTTON_UP_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    /*Configure GPIO pin : USB_RESET_Pin */
+    GPIO_InitStruct.Pin = USB_RESET_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(USB_RESET_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : USB_RESET_Pin */
-  GPIO_InitStruct.Pin = USB_RESET_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(USB_RESET_GPIO_Port, &GPIO_InitStruct);
+    /*Configure GPIO pin : SD_PRESET_Pin */
+    GPIO_InitStruct.Pin = SD_PRESET_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(SD_PRESET_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : SD_PRESET_Pin */
-  GPIO_InitStruct.Pin = SD_PRESET_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(SD_PRESET_GPIO_Port, &GPIO_InitStruct);
+    /* EXTI interrupt init*/
+    HAL_NVIC_SetPriority(EXTI3_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(EXTI3_IRQn);
 
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+}
 
-  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+void USB_Reset_GPIO(void)
+{
+    GPIO_InitTypeDef GPIO_InitStruct;
 
-  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+    GPIO_InitStruct.Pin = GPIO_PIN_10;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  HAL_NVIC_SetPriority(EXTI3_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
 
-  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
-
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+    HAL_Delay(100);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_10);
 
 }
 
