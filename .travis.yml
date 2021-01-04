@@ -38,8 +38,15 @@ before_script:
 script:
   - mkdir build
   - cd build
-  - cmake  ..
-  - make
+  - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -D_WHERE_BUILD=Cloud -DBUILD=GROUND_STATION ..
+  - make -j11
+  - make clean
+  - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -D_WHERE_BUILD=Cloud -DBUILD=MCU_MODULE ..
+  - make -j11
+  - make clean
+  - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -D_WHERE_BUILD=Cloud -DBUILD=SERVO_MODULE ..
+  - make -j11
+  - make clean
 
 
 #addons:
