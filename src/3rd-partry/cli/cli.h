@@ -40,7 +40,7 @@
 #include <tinystring.h>
 
 
-/** @brief CLI Error Result Execute */
+/** @brief CLI Result Execute */
 typedef enum{ 
 	CLI_OK = 0,
 	CLI_Err,
@@ -97,7 +97,7 @@ bool cli_loop_service(void);
  * @param descr - description
  * @return result append command
  * */
-CLI_Add_Result_t cli_add_new_cmd(const char* name, uint8_t (*fcn)(), uint8_t argc, CLI_Type_Mode_Cmd_t mode, const char* descr);
+CLI_Add_Result_t cli_add_new_cmd(const char* name, CLI_Result_t (*fcn)(), uint8_t argc, CLI_Type_Mode_Cmd_t mode, const char* descr);
 
 
 /** @brief Append new symbols for cli input parser */

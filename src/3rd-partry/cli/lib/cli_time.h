@@ -51,4 +51,6 @@ CLI_Time_t cli_time_get_time_ms(uint32_t msec);
 /** @brief Get time in millisecond + correction in ms  */
 CLI_Time_t cli_time_get_plus_time_ms(uint32_t msec);
 
+char* cli_time_get_curr_time_str(void);
+
 #endif // _CLI_TIME_H_

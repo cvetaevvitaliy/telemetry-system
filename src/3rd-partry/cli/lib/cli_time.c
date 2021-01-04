@@ -53,3 +53,15 @@ inline CLI_Time_t cli_time_get_plus_time_ms(uint32_t msec)
 {
     return cli_time_get_time_ms(msec + def_time_ms);
 }
+
+char* cli_time_get_curr_time_str(void)
+{
+    static char tv_str[20];
+    CLI_Time_t tv = {0};
+#if (CLI_TIMELEFT_EN == 1)
+    uint32_t ms = CLI_GETMS();
+    tv = cli_time_get_plus_time_ms(ms);
+#endif
+    sprintf(tv_str, "%02dh:%02dm:%02ds.%03d", (int) tv.hour, (int) tv.minute, (int) tv.second, (int) tv.msec);
+    return tv_str;
+}

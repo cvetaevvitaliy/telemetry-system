@@ -93,13 +93,13 @@ SET(CMAKE_C_FLAGS_INIT "${COMMON_FLAGS} -std=gnu99")
 SET(CMAKE_EXE_LINKER_FLAGS_INIT "-Wl,-gc-sections,--print-memory-usage -T ${LINKER_SCRIPT}")
 
 
-PROJECT(MCU_Module C CXX ASM)
+PROJECT(Telemetry_System C CXX ASM)
 SET(CMAKE_CXX_STANDARD 11)
 
 
 add_definitions(-D__weak=__attribute__\(\(weak\)\)
         -D__packed=__attribute__\(\(__packed__\)\)
-        -DUSE_HAL_DRIVER -DSTM32F405xx)
+        -DUSE_HAL_DRIVER -DSTM32F405xx -DMCU=\"STM32F405RG\")
 
 
 ####################################################################################################
@@ -190,6 +190,7 @@ foreach(TYPE ${SELECT_BUILD})
     elseif(BUILD STREQUAL MCU_MODULE)
         message(MCU_MODULE)
         SET(BUILD_NAME MCU_MODULE)
+        add_definitions(-DBUILD_NAME=\"MCU\ MODULE\t\")
 
         SET(SRC_FILE
                 Middlewares/Third_Party/FatFs/src/option/syscall.c
@@ -198,6 +199,9 @@ foreach(TYPE ${SELECT_BUILD})
                 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c
 
                 src/mcu_module/main.c
+                src/mcu_module/device_global_irq.c
+
+
                 src/mcu_module/device/bsp_driver_sd.c
                 src/mcu_module/device/fatfs.c
                 src/mcu_module/device/sd_diskio.c
@@ -207,13 +211,36 @@ foreach(TYPE ${SELECT_BUILD})
                 src/mcu_module/device/usb_device.c
                 src/mcu_module/device/usbd_cdc_if.c
                 src/mcu_module/device/usbd_conf.c
-                src/mcu_module/device/usbd_desc.c)
+                src/mcu_module/device/usbd_desc.c
+
+                src/3rd-partry/helper-library/tinyprintf/tinyprintf.c
+                src/3rd-partry/helper-library/tinystring/tinystring.c
+
+                src/3rd-partry/cli/lib/cli_input.c
+                src/3rd-partry/cli/lib/cli_log.c
+                src/3rd-partry/cli/lib/cli_queue.c
+                src/3rd-partry/cli/lib/cli_time.c
+                src/3rd-partry/cli/cli_io.c
+                src/3rd-partry/cli/cli.c
+
+                src/components/sx1276/sx1276.c
+                src/mcu_module/sx1276-board.c
+
+                src/mcu_module/range_test.c)
 
         SET(INC_FILE
                 Middlewares/Third_Party/FatFs/src
 
+                src/3rd-partry/helper-library/tinyprintf
+                src/3rd-partry/helper-library/tinystring
+
+                src/3rd-partry/cli
+                src/3rd-partry/cli/lib
+
                 src/mcu_module
-                src/mcu_module/device)
+                src/mcu_module/device
+
+                src/components/sx1276)
 
 #####################################################################################################
 ## GROUND_STATION
@@ -221,6 +248,8 @@ foreach(TYPE ${SELECT_BUILD})
         message(GROUND_STATION)
         SET(BUILD_NAME GROUND_STATION)
         add_definitions(-DBUILD_NAME=\"GROUND\ STATION\")
+        add_definitions(-DDEBUG=1)
+        add_definitions(-DDEBUG_TIMESTAMP=1)
 
         SET(SRC_FILE
                 Middlewares/Third_Party/FatFs/src/option/syscall.c
@@ -229,6 +258,8 @@ foreach(TYPE ${SELECT_BUILD})
                 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c
 
                 src/ground_station/main.c
+                src/ground_station/device_global_irq.c
+
                 src/ground_station/device/bsp_driver_sd.c
                 src/ground_station/device/fatfs.c
                 src/ground_station/device/sd_diskio.c
@@ -251,7 +282,17 @@ foreach(TYPE ${SELECT_BUILD})
                 src/3rd-partry/cli/lib/cli_queue.c
                 src/3rd-partry/cli/lib/cli_time.c
                 src/3rd-partry/cli/cli_io.c
-                src/3rd-partry/cli/cli.c)
+                src/3rd-partry/cli/cli.c
+
+                src/3rd-partry/ssd1306/ssd1306.c
+                src/3rd-partry/ssd1306/Fonts/Font_8x10.c
+                src/3rd-partry/bq25895/bq2589x_charger.c
+
+                src/components/sx1276/sx1276.c
+                src/ground_station/sx1276-board.c
+
+                src/ground_station/pcb_test.c
+                src/ground_station/range_test.c)
                 ####################################################################################################
 
         SET(INC_FILE
@@ -267,7 +308,14 @@ foreach(TYPE ${SELECT_BUILD})
                 src/3rd-partry/helper-library/tinystring
 
                 src/3rd-partry/cli
-                src/3rd-partry/cli/lib)
+                src/3rd-partry/cli/lib
+
+                src/3rd-partry/ssd1306/
+                src/3rd-partry/ssd1306/Fonts
+                src/3rd-partry/ssd1306/Image
+                src/3rd-partry/bq25895
+
+                src/components/sx1276)
     endif()
 endforeach()
 #####################################################################################################

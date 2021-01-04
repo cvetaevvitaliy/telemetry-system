@@ -74,9 +74,9 @@ struct {
 } CLI_State_s;
 
 // **************** Callback for included in CLI commands *****************
-static uint8_t help_cmd();              // print help
-static uint8_t reboot_mcu();            // reboot mcu
-static uint8_t print_cli_w(void);       // print welcome screen
+static CLI_Result_t help_cmd();              // print help
+static CLI_Result_t reboot_mcu();            // reboot mcu
+static CLI_Result_t print_cli_w(void);       // print welcome screen
 // ************************************************************************
 
 // ************************** static function *****************************
@@ -120,7 +120,7 @@ static void cli_welcome(void) {
     CLI_PRINTF("\r\n");
 }
 
-uint8_t sys_uptime(void)
+CLI_Result_t sys_uptime(void)
 {
     return CLI_OK;
 }
@@ -391,7 +391,7 @@ bool cli_loop_service()
  * @param descr - description
  * @return result append command
 * */
-CLI_Add_Result_t cli_add_new_cmd(const char *name, uint8_t (*fcn)(), uint8_t argc, CLI_Type_Mode_Cmd_t mode, const char *descr)
+CLI_Add_Result_t cli_add_new_cmd(const char *name, CLI_Result_t (*fcn)(), uint8_t argc, CLI_Type_Mode_Cmd_t mode, const char *descr)
 {
 
     if (CLI_State_s.countCommand >= CLI_SIZE_MAX_CMD) {
@@ -529,7 +529,7 @@ CLI_Cmd_t *_find_part_term_cmd(const char *cmdName)
 
 // *************************   sys cmd CLI    *****************************
 
-uint8_t help_cmd()
+CLI_Result_t help_cmd()
 {
     CLI_PRINTF("\r\nCount command: %d", (int) CLI_State_s.countCommand ); // -1 HELP
     CLI_PRINTF(SEPARATOR);
@@ -542,7 +542,7 @@ uint8_t help_cmd()
     return CLI_OK;
 }
 
-uint8_t reboot_mcu(void)
+CLI_Result_t reboot_mcu(void)
 {
     CLI_PRINTF("\r\nreset MCU\r\n")
     HAL_Delay(1000);
@@ -550,7 +550,7 @@ uint8_t reboot_mcu(void)
     return CLI_OK;
 }
 
-uint8_t print_cli_w(void)
+CLI_Result_t print_cli_w(void)
 {
     cli_welcome();
     return CLI_OK;
