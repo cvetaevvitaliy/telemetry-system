@@ -83,7 +83,7 @@ add_definitions(-DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING)
 
 SET(COMMON_FLAGS
     "-mcpu=cortex-m4 ${FPU_FLAGS} -mthumb -mthumb-interwork -ffunction-sections -fdata-sections \
-    -O0 -g -fno-common -fmessage-length=0 -specs=nosys.specs -specs=nano.specs")
+    -O3 -g3 -fno-common -fmessage-length=0 -specs=nosys.specs -specs=nano.specs")
 
 ####################################################################################################
 # Specificity flag definition for ARM Cortex M4 MCU
