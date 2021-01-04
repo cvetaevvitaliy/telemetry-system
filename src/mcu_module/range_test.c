@@ -65,7 +65,7 @@ void RangeTest_OnRxTimeout(void);
 void RangeTest_OnRxError(void);
 
 
-void RangeTest_Init(void)
+void range_test_init(void)
 {
 
     /** Radio initialization callback */
@@ -98,7 +98,7 @@ void RangeTest_Init(void)
 }
 
 
-void RangeTest_Execute(void)
+void range_test_execute(void)
 {
     if (HAL_GetTick() - delay > TX_TIMEOUT_VALUE) {
         static uint64_t i = 0;

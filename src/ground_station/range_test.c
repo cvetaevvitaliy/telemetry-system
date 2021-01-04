@@ -65,7 +65,7 @@ void RangeTest_OnRxTimeout(void);
 void RangeTest_OnRxError(void);
 
 
-void RangeTest_Init(void)
+void range_test_init(void)
 {
     HAL_GPIO_WritePin(LCD_RESET_GPIO_Port, LCD_RESET_Pin, GPIO_PIN_SET);
     HAL_Delay(10);
@@ -105,7 +105,7 @@ void RangeTest_Init(void)
 }
 
 
-void RangeTest_Execute(void)
+void range_test_execute(void)
 {
     char str[BUFFER_SIZE];
 

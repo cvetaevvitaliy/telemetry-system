@@ -199,6 +199,7 @@ foreach(TYPE ${SELECT_BUILD})
                 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c
 
                 src/mcu_module/main.c
+                src/mcu_module/device/hardware_init.c
                 src/mcu_module/device_global_irq.c
 
 
@@ -258,6 +259,7 @@ foreach(TYPE ${SELECT_BUILD})
                 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c
 
                 src/ground_station/main.c
+                src/ground_station/device/hardware_init.c
                 src/ground_station/device_global_irq.c
 
                 src/ground_station/device/bsp_driver_sd.c
