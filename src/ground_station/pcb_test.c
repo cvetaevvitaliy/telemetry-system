@@ -3,8 +3,9 @@
 
 static CLI_Result_t test_led(void);
 
-void add_test_cli_cmd(void)
+uint8_t add_test_cli_cmd(void)
 {
+    uint8_t res;
     /**
      * @brief Add command
      * @param name - input name
@@ -14,8 +15,9 @@ void add_test_cli_cmd(void)
      * @param descr - description
      * @return result append command
     * */
-    cli_add_new_cmd("led", test_led, 1, 0, "enable LED_2 - led 0 or led 1");
+    res = cli_add_new_cmd("led", test_led, 1, 0, "enable LED_2 - led 0 or led 1");
 
+    return res;
 }
 
 

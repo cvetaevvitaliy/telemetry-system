@@ -19,6 +19,7 @@
  */
 #ifndef __MAIN_H__
 #define __MAIN_H__
+#include <stdint.h>
 #include "device_hardware_def.h"
 
 /* ########################## Assert Selection ############################## */
@@ -29,7 +30,7 @@
 /* #define USE_FULL_ASSERT    1U */
 
 /** this function from pcb_test.c, for test PCB after solder */
-void add_test_cli_cmd(void);
+uint8_t add_test_cli_cmd(void);
 
 #ifdef __cplusplus
  extern "C" {

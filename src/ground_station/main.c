@@ -22,27 +22,66 @@
 #include "hardware_init.h"
 #include "cli.h"
 #include "range_test.h"
+#include "cmsis_os.h"
+
+osThreadId cli_task_handle;
+osThreadId range_test_task_handle;
+
+void cli_task(void const * argument);
+void range_test_task(void const * argument);
 
 int main(void)
 {
     hardware_init();
 
     charge_chip_init();
+    MX_USB_DEVICE_Init();
+    HAL_Delay(250); // for wait init USB virtual com port
 
     cli_init();
 
-    add_test_cli_cmd();
+    osThreadDef(CLI_Task, cli_task, osPriorityLow, 0, 128);
+    cli_task_handle = osThreadCreate(osThread(CLI_Task), NULL);
 
-    range_test_init();
+    osThreadDef(RangeTest_Task, range_test_task, osPriorityNormal, 0, 128);
+    range_test_task_handle = osThreadCreate(osThread(RangeTest_Task), NULL);
 
-    while (1) {
+    osKernelStart();
 
-        range_test_execute();
+    LOG_ERROR("Error: Kernel down\n");
 
-        cli_loop_service();
+}
 
+
+void cli_task(void const * argument)
+{
+    if (ADD_CMD_OK != add_test_cli_cmd()){
+        LOG_ERROR("Error add test command\n")
     }
 
+    LOG_INFO("CLI task start\n")
+
+    while (1)
+    {
+        cli_loop_service();
+
+        osDelay(100);
+    }
+}
+
+
+void range_test_task(void const * argument)
+{
+    range_test_init();
+
+    LOG_INFO("RangeTest task start\n")
+
+    while (1)
+    {
+        range_test_execute();
+
+        osDelay(10);
+    }
 }
 
 

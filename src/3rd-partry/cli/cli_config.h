@@ -136,9 +136,9 @@ extern char output_print_buffer[128];
 /**< This macro for debug software */
 #if (DEBUG == 1) // todo: need implement LOG LEVEL : 3 - Debug, 2 - Info, 1 - Error, 0 - Nothing print in console
 #if (DEBUG_TIMESTAMP == 1)
-#define LOG_DEBUG(f_, ...)                      CLI_PRINTF(("\n%s [DEBUG] "f_), cli_time_get_curr_time_str(), ##__VA_ARGS__)
-#define LOG_INFO(f_, ...)                       CLI_PRINTF(("\n%s [INFO] "f_), cli_time_get_curr_time_str(), ##__VA_ARGS__)
-#define LOG_ERROR(f_, ...)                      CLI_PRINTF(("\n%s [ERROR] "f_), cli_time_get_curr_time_str(), ##__VA_ARGS__)
+#define LOG_DEBUG(f_, ...)                      CLI_PRINTF(("%s [DEBUG] "f_), cli_time_get_curr_time_str(), ##__VA_ARGS__)
+#define LOG_INFO(f_, ...)                       CLI_PRINTF(("%s [INFO] "f_), cli_time_get_curr_time_str(), ##__VA_ARGS__)
+#define LOG_ERROR(f_, ...)                      CLI_PRINTF(("%s [ERROR] "f_), cli_time_get_curr_time_str(), ##__VA_ARGS__)
 #else
 #define LOG_DEBUG(f_, ...)                      CLI_PRINTF(("\n[DEBUG] "f_), ##__VA_ARGS__)
 #define LOG_INFO(f_, ...)                       CLI_PRINTF(("\n[INFO] "f_), ##__VA_ARGS__)

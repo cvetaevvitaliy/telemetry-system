@@ -369,7 +369,7 @@ CLI_Result_t ExecuteString(const char *str)
 }
 
 /** @brief Execute CLI */
-bool cli_loop_service()
+bool cli_loop_service(void)
 {
 
     if (CLI_State_s.isEntered == true ) {

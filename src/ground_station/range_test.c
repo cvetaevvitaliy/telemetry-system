@@ -149,9 +149,9 @@ void RangeTest_OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t sn
     SnrValue = snr;
     State = RX;
 
-    LOG_DEBUG("RSSI: %ddBm",RssiValue);
-    LOG_DEBUG("SNR: %ddb",SnrValue);
-    LOG_DEBUG("Payload: %s",Buffer);
+    LOG_DEBUG("RSSI: %ddBm\n",RssiValue);
+    LOG_DEBUG("SNR: %ddb\n",SnrValue);
+    LOG_DEBUG("Payload: %s\n",Buffer);
 }
 
 void RangeTest_OnTxTimeout(void )
@@ -176,5 +176,5 @@ void RangeTest_OnRxError(void )
     ssd1306_Draw_String(str, 0, 40, &Font_8x10);
     State = RX;
 
-    LOG_ERROR("RX Error: %d", error);
+    LOG_ERROR("RX Error: %d\n", error);
 }

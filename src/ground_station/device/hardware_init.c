@@ -19,6 +19,7 @@
  */
 #include "hardware_init.h"
 #include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_tim.h"
 #include "fatfs.h"
 #include "usb_device.h"
 #include "bq2589x_charger.h"
@@ -33,6 +34,7 @@ SPI_HandleTypeDef hspi1;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim10;
+TIM_HandleTypeDef        htim6;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -51,7 +53,7 @@ static void TIMER10_Init(void);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
-
+uint32_t                 uwIncrementState = 0;
 
 void hardware_init(void)
 {
@@ -60,6 +62,7 @@ void hardware_init(void)
     SystemClock_Config();
 
     MX_GPIO_Init();
+    USB_Reset_GPIO();
     MX_I2C1_Init();
     MX_SDIO_SD_Init();
     MX_SPI1_Init();
@@ -68,8 +71,6 @@ void hardware_init(void)
     MX_USART2_UART_Init();
     MX_FATFS_Init();
     MX_RTC_Init();
-    USB_Reset_GPIO();
-    MX_USB_DEVICE_Init();
     TIMER10_Init();
     HAL_TIM_Base_Start_IT(&htim10);
 }
@@ -305,7 +306,7 @@ static void TIMER10_Init(void)
     htim10.Instance = TIM10;
     htim10.Init.Prescaler = (uint16_t) (SystemCoreClock / 100) - 1;
     htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim10.Init.Period = 100;
+    htim10.Init.Period = 50;
     htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     if (HAL_TIM_Base_Init(&htim10) != HAL_OK) {
         _Error_Handler(__FILE__, __LINE__);
@@ -444,4 +445,85 @@ void USB_Reset_GPIO(void)
     HAL_Delay(100);
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_10);
 
+}
+
+/**
+  * @brief  This function configures the TIM6 as a time base source.
+  *         The time source is configured  to have 1ms time base with a dedicated
+  *         Tick interrupt priority.
+  * @note   This function is called  automatically at the beginning of program after
+  *         reset by HAL_Init() or at any time when clock is configured, by HAL_RCC_ClockConfig().
+  * @param  TickPriority: Tick interrupt priorty.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+{
+    RCC_ClkInitTypeDef    clkconfig;
+    uint32_t              uwTimclock = 0;
+    uint32_t              uwPrescalerValue = 0;
+    uint32_t              pFLatency;
+
+    /*Configure the TIM6 IRQ priority */
+    HAL_NVIC_SetPriority(TIM6_DAC_IRQn, TickPriority ,0);
+
+    /* Enable the TIM6 global Interrupt */
+    HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
+
+    /* Enable TIM6 clock */
+    __HAL_RCC_TIM6_CLK_ENABLE();
+
+    /* Get clock configuration */
+    HAL_RCC_GetClockConfig(&clkconfig, &pFLatency);
+
+    /* Compute TIM6 clock */
+    uwTimclock = 2*HAL_RCC_GetPCLK1Freq();
+
+    /* Compute the prescaler value to have TIM6 counter clock equal to 1MHz */
+    uwPrescalerValue = (uint32_t) ((uwTimclock / 1000000) - 1);
+
+    /* Initialize TIM6 */
+    htim6.Instance = TIM6;
+
+    /* Initialize TIMx peripheral as follow:
+    + Period = [(TIM6CLK/1000) - 1]. to have a (1/1000) s time base.
+    + Prescaler = (uwTimclock/1000000 - 1) to have a 1MHz counter clock.
+    + ClockDivision = 0
+    + Counter direction = Up
+    */
+    htim6.Init.Period = (1000000 / 1000) - 1;
+    htim6.Init.Prescaler = uwPrescalerValue;
+    htim6.Init.ClockDivision = 0;
+    htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
+    if(HAL_TIM_Base_Init(&htim6) == HAL_OK)
+    {
+        /* Start the TIM time Base generation in interrupt mode */
+        return HAL_TIM_Base_Start_IT(&htim6);
+    }
+
+    /* Return function status */
+    return HAL_ERROR;
+}
+
+/**
+  * @brief  Suspend Tick increment.
+  * @note   Disable the tick increment by disabling TIM6 update interrupt.
+  * @param  None
+  * @retval None
+  */
+void HAL_SuspendTick(void)
+{
+    /* Disable TIM6 update Interrupt */
+    __HAL_TIM_DISABLE_IT(&htim6, TIM_IT_UPDATE);
+}
+
+/**
+  * @brief  Resume Tick increment.
+  * @note   Enable the tick increment by Enabling TIM6 update interrupt.
+  * @param  None
+  * @retval None
+  */
+void HAL_ResumeTick(void)
+{
+    /* Enable TIM6 Update interrupt */
+    __HAL_TIM_ENABLE_IT(&htim6, TIM_IT_UPDATE);
 }
