@@ -157,6 +157,24 @@ SET(FAT_FS_SRC
 
 SET(FAT_FS_INC Middlewares/Third_Party/FatFs/src)
 
+# FreeRTOS source
+SET(FreeRTOS_SRC
+        src/3rd-partry/FreeRTOS/portable/GCC/ARM_CM4F/port.c
+        src/3rd-partry/FreeRTOS/portable/MemMang/heap_4.c
+        src/3rd-partry/FreeRTOS/croutine.c
+        src/3rd-partry/FreeRTOS/event_groups.c
+        src/3rd-partry/FreeRTOS/list.c
+        src/3rd-partry/FreeRTOS/queue.c
+        src/3rd-partry/FreeRTOS/tasks.c
+        src/3rd-partry/FreeRTOS/timers.c
+        src/3rd-partry/FreeRTOS/CMSIS_RTOS/cmsis_os.c)
+
+# FreeRTOS header
+SET(FreeRTOS_INC
+        src/3rd-partry/FreeRTOS
+        src/3rd-partry/FreeRTOS/include
+        src/3rd-partry/FreeRTOS/portable/GCC/ARM_CM4F
+        src/3rd-partry/FreeRTOS/CMSIS_RTOS)
 
 ####################################################################################################
 # Select build: SERVO_MODULE, MCU_MODULE or GROUND_STATION, please add to CMake config -DBUILD=<name>
@@ -249,14 +267,14 @@ foreach(TYPE ${SELECT_BUILD})
         message(GROUND_STATION)
         SET(BUILD_NAME GROUND_STATION)
         add_definitions(-DBUILD_NAME=\"GROUND\ STATION\")
-        add_definitions(-DDEBUG=1)
-        add_definitions(-DDEBUG_TIMESTAMP=1)
 
         SET(SRC_FILE
                 Middlewares/Third_Party/FatFs/src/option/syscall.c
                 Middlewares/Third_Party/FatFs/src/diskio.c
                 Middlewares/Third_Party/FatFs/src/ff.c
                 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c
+
+                ${FreeRTOS_SRC}
 
                 src/ground_station/main.c
                 src/ground_station/device/hardware_init.c
@@ -300,6 +318,7 @@ foreach(TYPE ${SELECT_BUILD})
         SET(INC_FILE
                 Middlewares/Third_Party/FatFs/src
 
+                ${FreeRTOS_INC}
                 src/ground_station
                 src/ground_station/device
 
@@ -327,6 +346,8 @@ if (_WHERE_BUILD STREQUAL Cloud)
     add_definitions(-D_WHERE_BUILD=\"Cloud\ build\")
 else()
     add_definitions(-D_WHERE_BUILD=\"Local\ build\")
+    add_definitions(-DDEBUG=1)
+    add_definitions(-DDEBUG_TIMESTAMP=1)
 endif()
 
 add_executable (${BUILD_NAME} ${STM32_HAL_SRC} ${SRC_FILE} ${LINKER_SCRIPT})

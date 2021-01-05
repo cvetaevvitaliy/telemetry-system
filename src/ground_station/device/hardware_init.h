@@ -25,4 +25,7 @@ void hardware_init(void);
 
 void charge_chip_init(void);
 
+void USB_Reset_GPIO(void);
+void MX_USB_DEVICE_Init(void);
+
 #endif //TELEMETRY_SYSTEM_HARDWARE_INIT_H

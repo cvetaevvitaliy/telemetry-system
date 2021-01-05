@@ -22,6 +22,13 @@
 #include "hardware_init.h"
 #include "cli.h"
 #include "range_test.h"
+#include "cmsis_os.h"
+
+osThreadId cli_task_handle;
+osThreadId range_test_task_handle;
+
+void cli_task(void const * argument);
+void range_test_task(void const * argument);
 
 int main(void)
 {
@@ -29,20 +36,50 @@ int main(void)
 
     charge_chip_init();
 
+    osThreadDef(CLI_Task, cli_task, osPriorityLow, 0, 128);
+    cli_task_handle = osThreadCreate(osThread(CLI_Task), NULL);
+
+    osThreadDef(RangeTest_Task, range_test_task, osPriorityNormal, 0, 128);
+    range_test_task_handle = osThreadCreate(osThread(RangeTest_Task), NULL);
+
+    osKernelStart();
+
+    LOG_ERROR("Error: Kernel down\n");
+
+}
+
+
+void cli_task(void const * argument)
+{
+    MX_USB_DEVICE_Init();
+
     cli_init();
 
     add_test_cli_cmd();
 
-    range_test_init();
+    LOG_INFO("CLI task start\n")
 
-    while (1) {
-
-        range_test_execute();
-
+    while (1)
+    {
         cli_loop_service();
 
+        osDelay(100);
     }
+}
 
+
+void range_test_task(void const * argument)
+{
+    range_test_init();
+
+    LOG_INFO("RangeTest task start\n")
+
+    while (1)
+    {
+        range_test_execute();
+
+        osDelay(10);
+    }
 }
 
 
