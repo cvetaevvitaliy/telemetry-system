@@ -35,6 +35,10 @@ int main(void)
     hardware_init();
 
     charge_chip_init();
+    MX_USB_DEVICE_Init();
+    HAL_Delay(250); // for wait init USB virtual com port
+
+    cli_init();
 
     osThreadDef(CLI_Task, cli_task, osPriorityLow, 0, 128);
     cli_task_handle = osThreadCreate(osThread(CLI_Task), NULL);
@@ -51,11 +55,9 @@ int main(void)
 
 void cli_task(void const * argument)
 {
-    MX_USB_DEVICE_Init();
-
-    cli_init();
-
-    add_test_cli_cmd();
+    if (ADD_CMD_OK != add_test_cli_cmd()){
+        LOG_ERROR("Error add test command\n")
+    }
 
     LOG_INFO("CLI task start\n")
 
