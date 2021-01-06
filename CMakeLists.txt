@@ -216,6 +216,8 @@ foreach(TYPE ${SELECT_BUILD})
                 Middlewares/Third_Party/FatFs/src/ff.c
                 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c
 
+                ${FreeRTOS_SRC}
+
                 src/mcu_module/main.c
                 src/mcu_module/device/hardware_init.c
                 src/mcu_module/device_global_irq.c
@@ -249,6 +251,8 @@ foreach(TYPE ${SELECT_BUILD})
 
         SET(INC_FILE
                 Middlewares/Third_Party/FatFs/src
+
+                ${FreeRTOS_INC}
 
                 src/3rd-partry/helper-library/tinyprintf
                 src/3rd-partry/helper-library/tinystring

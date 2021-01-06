@@ -22,7 +22,6 @@
 RadioEvents_t RadioEvents;
 
 static uint8_t Buffer[BUFFER_SIZE];
-static uint32_t delay;
 
 typedef enum
 {
@@ -92,7 +91,6 @@ void range_test_init(void)
 
     Radio.Rx( RX_TIMEOUT_VALUE );
 
-    delay = HAL_GetTick();
 
 
 }
@@ -100,21 +98,18 @@ void range_test_init(void)
 
 void range_test_execute(void)
 {
-    if (HAL_GetTick() - delay > TX_TIMEOUT_VALUE) {
-        static uint64_t i = 0;
-        i++;
-        sprintf(Buffer,"%d PING ",i);
-        Radio.Send(Buffer, BUFFER_SIZE);
-        delay = HAL_GetTick();
-        HAL_GPIO_TogglePin(LED_2_GPIO_Port, LED_2_Pin);
-    }
+    static uint64_t i = 0;
+    i++;
+    sprintf(Buffer, "%d PING ", i);
+    Radio.Send(Buffer, BUFFER_SIZE);
+    HAL_GPIO_TogglePin(LED_2_GPIO_Port, LED_2_Pin);
 
 }
 
 void RangeTest_OnTxDone(void )
 {
-    Radio.Sleep( );
-    State = TX;
+
+    State = RX;
 }
 
 
