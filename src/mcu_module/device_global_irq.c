@@ -27,6 +27,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         CDC_SEND_BUFF(); // for send CLI buff
     }
 
+    /** This timer for HAL SysTick*/
+    else if (htim->Instance == TIM6) {
+        HAL_IncTick();
+        SysTick_CLI();
+    }
+
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
