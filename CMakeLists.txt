@@ -235,12 +235,12 @@ foreach(TYPE ${SELECT_BUILD})
                 src/3rd-partry/helper-library/tinyprintf/tinyprintf.c
                 src/3rd-partry/helper-library/tinystring/tinystring.c
 
-                src/3rd-partry/cli/lib/cli_input.c
-                src/3rd-partry/cli/lib/cli_log.c
-                src/3rd-partry/cli/lib/cli_queue.c
-                src/3rd-partry/cli/lib/cli_time.c
-                src/3rd-partry/cli/cli_io.c
-                src/3rd-partry/cli/cli.c
+                src/components/cli/lib/cli_input.c
+                src/components/cli/lib/cli_log.c
+                src/components/cli/lib/cli_queue.c
+                src/components/cli/lib/cli_time.c
+                src/components/cli/cli_io.c
+                src/components/cli/cli.c
 
                 src/components/sx1276/sx1276.c
                 src/mcu_module/sx1276-board.c
@@ -253,8 +253,8 @@ foreach(TYPE ${SELECT_BUILD})
                 src/3rd-partry/helper-library/tinyprintf
                 src/3rd-partry/helper-library/tinystring
 
-                src/3rd-partry/cli
-                src/3rd-partry/cli/lib
+                src/components/cli
+                src/components/cli/lib
 
                 src/mcu_module
                 src/mcu_module/device
@@ -297,16 +297,16 @@ foreach(TYPE ${SELECT_BUILD})
                 src/3rd-partry/helper-library/tinyprintf/tinyprintf.c
                 src/3rd-partry/helper-library/tinystring/tinystring.c
 
-                src/3rd-partry/cli/lib/cli_input.c
-                src/3rd-partry/cli/lib/cli_log.c
-                src/3rd-partry/cli/lib/cli_queue.c
-                src/3rd-partry/cli/lib/cli_time.c
-                src/3rd-partry/cli/cli_io.c
-                src/3rd-partry/cli/cli.c
+                src/components/cli/lib/cli_input.c
+                src/components/cli/lib/cli_log.c
+                src/components/cli/lib/cli_queue.c
+                src/components/cli/lib/cli_time.c
+                src/components/cli/cli_io.c
+                src/components/cli/cli.c
 
-                src/3rd-partry/ssd1306/ssd1306.c
-                src/3rd-partry/ssd1306/Fonts/Font_8x10.c
-                src/3rd-partry/bq25895/bq2589x_charger.c
+                src/components/ssd1306/ssd1306.c
+                src/components/ssd1306/Fonts/Font_8x10.c
+                src/components/bq25895/bq2589x_charger.c
 
                 src/components/sx1276/sx1276.c
                 src/ground_station/sx1276-board.c
@@ -328,13 +328,13 @@ foreach(TYPE ${SELECT_BUILD})
                 src/3rd-partry/helper-library/tinyprintf
                 src/3rd-partry/helper-library/tinystring
 
-                src/3rd-partry/cli
-                src/3rd-partry/cli/lib
+                src/components/cli
+                src/components/cli/lib
 
-                src/3rd-partry/ssd1306/
-                src/3rd-partry/ssd1306/Fonts
-                src/3rd-partry/ssd1306/Image
-                src/3rd-partry/bq25895
+                src/components/ssd1306/
+                src/components/ssd1306/Fonts
+                src/components/ssd1306/Image
+                src/components/bq25895
 
                 src/components/sx1276)
     endif()
