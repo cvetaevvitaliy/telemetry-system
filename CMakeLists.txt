@@ -316,6 +316,7 @@ foreach(TYPE ${SELECT_BUILD})
                 src/components/cli/lib/cli_time.c
                 src/components/cli/cli_io.c
                 src/components/cli/cli.c
+                src/components/cli/ulog/ulog.c
 
                 src/components/ssd1306/ssd1306.c
                 src/components/ssd1306/Fonts/Font_8x10.c
@@ -343,6 +344,7 @@ foreach(TYPE ${SELECT_BUILD})
 
                 src/components/cli
                 src/components/cli/lib
+                src/components/cli/ulog
 
                 src/components/ssd1306/
                 src/components/ssd1306/Fonts
