@@ -115,7 +115,7 @@ bool cli_get_arg_hex_by_flag(const char* flag, uint32_t* outValue);
 /** @brief This function for get argument in string */
 int cli_get_arg_str(uint8_t index, char* str);
 
-
+char* cli_get_arg(uint8_t index);
 /** @brief Convert and Get argument in Dec 
  * @param index argument
  * @return results conversion

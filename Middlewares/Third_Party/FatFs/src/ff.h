@@ -39,7 +39,7 @@ extern "C" {
 #if _MULTI_PARTITION		/* Multiple partition configuration */
 typedef struct {
 	BYTE pd;	/* Physical drive number */
-	BYTE pt;	/* Partition: 0:Auto detect, 1-4:Forced partition) */
+	BYTE pt_in;	/* Partition: 0:Auto detect, 1-4:Forced partition) */
 } PARTITION;
 extern PARTITION VolToPart[];	/* Volume - Partition resolution table */
 #endif

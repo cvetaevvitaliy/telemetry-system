@@ -23,13 +23,15 @@
 #include "cli.h"
 #include "range_test.h"
 #include "cmsis_os.h"
+#include "gps_service.h"
 
 osThreadId cli_task_handle;
 osThreadId range_test_task_handle;
+osThreadId gps_task_handle;
 
 void cli_task(void const * argument);
 void range_test_task(void const * argument);
-
+void gps_task(void const * argument);
 
 int main(void)
 {
@@ -43,6 +45,10 @@ int main(void)
     osThreadDef(RangeTest_Task, range_test_task, osPriorityNormal, 0, 128);
     range_test_task_handle = osThreadCreate(osThread(RangeTest_Task), NULL);
 
+    osThreadDef(GPS_Task, gps_task, osPriorityHigh, 0, 256);
+    gps_task_handle = osThreadCreate(osThread(GPS_Task), NULL);
+
+
     osKernelStart();
 
     while (1) {
@@ -54,8 +60,6 @@ int main(void)
 
 void cli_task(void const * argument)
 {
-
-    LOG_INFO("CLI task start\n")
 
     while (1)
     {
@@ -70,15 +74,29 @@ void range_test_task(void const * argument)
 {
     range_test_init();
 
-    LOG_INFO("RangeTest task start\n")
-
     while (1)
     {
-        range_test_execute();
+        //range_test_execute();
 
         osDelay(100);
     }
 }
+
+
+
+void gps_task(void const * argument)
+{
+    gps_service_init();
+
+    while (1)
+    {
+
+        gps_service_execute();
+
+        osDelay(250);
+    }
+}
+
 
 /**
   * @brief  This function is executed in case of error occurrence.

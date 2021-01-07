@@ -471,7 +471,7 @@
 /* Definitions of volume - partition conversion */
 #if _MULTI_PARTITION
 #define LD2PD(vol) VolToPart[vol].pd	/* Get physical drive number */
-#define LD2PT(vol) VolToPart[vol].pt	/* Get partition index */
+#define LD2PT(vol) VolToPart[vol].pt_in	/* Get partition index */
 #else
 #define LD2PD(vol) (BYTE)(vol)	/* Each logical drive is bound to the same physical drive number */
 #define LD2PT(vol) 0			/* Find first valid partition or in SFD */

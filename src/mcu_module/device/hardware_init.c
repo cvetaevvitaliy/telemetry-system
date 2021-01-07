@@ -45,14 +45,12 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 static void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_SDIO_SD_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SPI3_Init(void);
 static void MX_TIM1_Init(void);
-static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -73,7 +71,6 @@ void hardware_init(void)
     MX_SPI1_Init();
     MX_SPI3_Init();
     MX_TIM1_Init();
-    MX_USART1_UART_Init();
     MX_USART2_UART_Init();
     MX_FATFS_Init();
     USB_Reset_GPIO();
@@ -325,11 +322,11 @@ static void MX_TIM1_Init(void)
 }
 
 /* USART1 init function */
-static void MX_USART1_UART_Init(void)
+void MX_USART1_UART_Init(void)
 {
 
     huart1.Instance = USART1;
-    huart1.Init.BaudRate = 115200;
+    huart1.Init.BaudRate = 9600;
     huart1.Init.WordLength = UART_WORDLENGTH_8B;
     huart1.Init.StopBits = UART_STOPBITS_1;
     huart1.Init.Parity = UART_PARITY_NONE;
@@ -348,7 +345,7 @@ static void MX_USART2_UART_Init(void)
 {
 
     huart2.Instance = USART2;
-    huart2.Init.BaudRate = 115200;
+    huart2.Init.BaudRate = 9600;
     huart2.Init.WordLength = UART_WORDLENGTH_8B;
     huart2.Init.StopBits = UART_STOPBITS_1;
     huart2.Init.Parity = UART_PARITY_NONE;
@@ -366,7 +363,7 @@ static void MX_USART2_UART_Init(void)
 /**
   * Enable DMA controller clock
   */
-static void MX_DMA_Init(void)
+void MX_DMA_Init(void)
 {
     /* DMA controller clock enable */
     __HAL_RCC_DMA1_CLK_ENABLE();
@@ -484,8 +481,9 @@ void USB_Reset_GPIO(void)
 
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
 
-    HAL_Delay(250);
+    HAL_Delay(500);
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_10);
+    HAL_Delay(100);
 
 }
 
