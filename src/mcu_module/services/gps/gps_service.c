@@ -181,20 +181,20 @@ void _gps_parser(uint8_t *data)
 
 void gps_service_execute(void)
 {
-
+    // todo: need implement push data to Queue
     if (GPS_State.data_ready == true) {
 
-        ULOG_DEBUG("Latitude: %f\n", GPS_Data.latitude);
-        ULOG_DEBUG("Longitude: %f\n", GPS_Data.longitude);
-        ULOG_DEBUG("GPS speed: %.3f\n", GPS_Data.gps_speed);
-        ULOG_DEBUG("GPS fix quality: %d\n", GPS_Data.fix_quality);
-        ULOG_DEBUG("GPS fix type: %d\n", GPS_Data.fix_type);
-        ULOG_DEBUG("GPS sats: %d\n", GPS_Data.sats);
-        ULOG_DEBUG("GPS hdop: %.2f\n", GPS_Data.hdop);
-        ULOG_DEBUG("GPS vdop: %.2f\n", GPS_Data.vdop);
-        ULOG_DEBUG("GPS pdop: %.2f\n", GPS_Data.pdop);
-        ULOG_DEBUG("GPS Time: %d:%d:%d\n", GPS_Data.time.hours, GPS_Data.time.minutes, GPS_Data.time.seconds);
-        ULOG_DEBUG("GPS Date: %02d.%02d.%d\n", GPS_Data.date.day, GPS_Data.date.month, GPS_Data.date.year);
+        ULOG_TRACE("Latitude: %f\n", GPS_Data.latitude);
+        ULOG_TRACE("Longitude: %f\n", GPS_Data.longitude);
+        ULOG_TRACE("GPS speed: %.3f\n", GPS_Data.gps_speed);
+        ULOG_TRACE("GPS fix quality: %d\n", GPS_Data.fix_quality);
+        ULOG_TRACE("GPS fix type: %d\n", GPS_Data.fix_type);
+        ULOG_TRACE("GPS sats: %d\n", GPS_Data.sats);
+        ULOG_TRACE("GPS hdop: %.2f\n", GPS_Data.hdop);
+        ULOG_TRACE("GPS vdop: %.2f\n", GPS_Data.vdop);
+        ULOG_TRACE("GPS pdop: %.2f\n", GPS_Data.pdop);
+        ULOG_TRACE("GPS Time: %d:%d:%d\n", GPS_Data.time.hours, GPS_Data.time.minutes, GPS_Data.time.seconds);
+        ULOG_TRACE("GPS Date: %02d.%02d.%d\n", GPS_Data.date.day, GPS_Data.date.month, GPS_Data.date.year);
 
         GPS_State.data_ready = false;
 

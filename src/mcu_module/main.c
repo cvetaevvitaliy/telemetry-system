@@ -107,7 +107,7 @@ void gps_task(void const * argument)
 void _Error_Handler(char *file, int line)
 {
     /** Error_Handler_Debug */
-    LOG_ERROR("Error in: %s %d", file, line);
+    ULOG_ERROR("Error in: %s %d", file, line);
 }
 
 #ifdef  USE_FULL_ASSERT
