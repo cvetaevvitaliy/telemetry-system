@@ -71,8 +71,6 @@ static uint8_t ch;
 FAST_RAM GPS_State_t GPS_State = {0};
 GPS_Data_t GPS_Data = {0};
 
-struct minmea_sentence_rmc frame_rmc;
-
 
 void gps_service_init(void)
 {
@@ -80,6 +78,7 @@ void gps_service_init(void)
     MX_USART1_UART_Init();
     HAL_UART_Receive_DMA(&huart1,&ch, 1);
 }
+
 
 void gps_service_put_char_handle(void)
 {
@@ -110,7 +109,6 @@ void gps_service_put_char_handle(void)
 }
 
 
-
 void _gps_parser(uint8_t *data)
 {
 
@@ -125,6 +123,7 @@ void _gps_parser(uint8_t *data)
         case MINMEA_SENTENCE_RMC: {
             struct minmea_sentence_rmc frame;
             if (minmea_parse_rmc(&frame, (char *) data)) {
+
                 GPS_Data.latitude = (float)minmea_tocoord(&frame.latitude);
                 GPS_Data.longitude = (float)minmea_tocoord(&frame.longitude);
                 GPS_Data.gps_speed = (float)minmea_tofloat(&frame.speed);
@@ -154,63 +153,26 @@ void _gps_parser(uint8_t *data)
             struct minmea_sentence_gsa frame;
             if (minmea_parse_gsa(&frame, (char *) data)) {
                 GPS_Data.fix_type = (uint8_t)frame.fix_type;
+                GPS_Data.hdop = (float) minmea_tofloat(&frame.hdop);
+                GPS_Data.vdop = (float) minmea_tofloat(&frame.vdop);
+                GPS_Data.pdop = (float) minmea_tofloat(&frame.pdop);
             }
         }
-
             break;
 
         case MINMEA_SENTENCE_GLL:
             break;
 
-        case MINMEA_SENTENCE_GST: {
-//            struct minmea_sentence_gst frame;
-//            if (minmea_parse_gst(&frame, (char *) data)) {
-//                ULOG_DEBUG("$GNGST: raw latitude,longitude and altitude error deviation: (%d/%d,%d/%d,%d/%d)\n",
-//                         frame.latitude_error_deviation.value, frame.latitude_error_deviation.scale,
-//                         frame.longitude_error_deviation.value, frame.longitude_error_deviation.scale,
-//                         frame.altitude_error_deviation.value, frame.altitude_error_deviation.scale);
-//                ULOG_DEBUG("$GNGST: fixed point latitude,longitude and altitude error deviation"
-//                         " scaled to one decimal place: (%d,%d,%d)\n",
-//                         minmea_rescale(&frame.latitude_error_deviation, 10),
-//                         minmea_rescale(&frame.longitude_error_deviation, 10),
-//                         minmea_rescale(&frame.altitude_error_deviation, 10));
-//                ULOG_DEBUG("$GNGST: floating point degree latitude, longitude and altitude error deviation: (%f,%f,%f)",
-//                         minmea_tofloat(&frame.latitude_error_deviation),
-//                         minmea_tofloat(&frame.longitude_error_deviation),
-//                         minmea_tofloat(&frame.altitude_error_deviation));
-//            }
-        }
+        case MINMEA_SENTENCE_GST:
             break;
 
         case MINMEA_SENTENCE_GSV:
             break;
 
-        case MINMEA_SENTENCE_VTG: {
-//            struct minmea_sentence_vtg frame;
-//            if (minmea_parse_vtg(&frame, (char *) data)) {
-//                ULOG_DEBUG("$GNVTG: speed knots = %.2f\n",
-//                         minmea_tofloat(&frame.speed_knots));
-//                ULOG_DEBUG("$GNVTG: speed kph = %.2f\n",
-//                         minmea_tofloat(&frame.speed_kph));
-//            }
-        }
-
+        case MINMEA_SENTENCE_VTG:
             break;
 
-        case MINMEA_SENTENCE_ZDA: {
-//            struct minmea_sentence_zda frame;
-//            if (minmea_parse_zda(&frame, (char *) data)) {
-//                ULOG_DEBUG("$GNZDA: Time: %d:%d:%d %02d.%02d.%d UTC%+03d:%02d\n",
-//                         frame.time.hours,
-//                         frame.time.minutes,
-//                         frame.time.seconds,
-//                         frame.date.day,
-//                         frame.date.month,
-//                         frame.date.year,
-//                         frame.hour_offset,
-//                         frame.minute_offset);
-//            }
-        }
+        case MINMEA_SENTENCE_ZDA:
             break;
     }
 
@@ -220,13 +182,17 @@ void _gps_parser(uint8_t *data)
 void gps_service_execute(void)
 {
 
-    if (GPS_State.data_ready == true){
+    if (GPS_State.data_ready == true) {
+
         ULOG_DEBUG("Latitude: %f\n", GPS_Data.latitude);
         ULOG_DEBUG("Longitude: %f\n", GPS_Data.longitude);
-        ULOG_DEBUG("GPS speed: %f\n", GPS_Data.gps_speed);
+        ULOG_DEBUG("GPS speed: %.3f\n", GPS_Data.gps_speed);
         ULOG_DEBUG("GPS fix quality: %d\n", GPS_Data.fix_quality);
         ULOG_DEBUG("GPS fix type: %d\n", GPS_Data.fix_type);
         ULOG_DEBUG("GPS sats: %d\n", GPS_Data.sats);
+        ULOG_DEBUG("GPS hdop: %.2f\n", GPS_Data.hdop);
+        ULOG_DEBUG("GPS vdop: %.2f\n", GPS_Data.vdop);
+        ULOG_DEBUG("GPS pdop: %.2f\n", GPS_Data.pdop);
         ULOG_DEBUG("GPS Time: %d:%d:%d\n", GPS_Data.time.hours, GPS_Data.time.minutes, GPS_Data.time.seconds);
         ULOG_DEBUG("GPS Date: %02d.%02d.%d\n", GPS_Data.date.day, GPS_Data.date.month, GPS_Data.date.year);
 
