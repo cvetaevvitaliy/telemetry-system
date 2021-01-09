@@ -24,4 +24,7 @@
 
 void hardware_init(void);
 
+void MX_USART1_UART_Init(void);
+void MX_DMA_Init(void);
+
 #endif //TELEMETRY_SYSTEM_HARDWARE_INIT_H

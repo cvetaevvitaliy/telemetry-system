@@ -17,33 +17,17 @@
  *
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __MAIN_H__
-#define __MAIN_H__
-#include "device_hardware_def.h"
-
-/** This macro for moving variable to CCMRAM memory - Core Coupled Memory or Fast RAM kernel memory LENGTH = 64K */
-#ifdef UNIT_TEST
-#define FAST_RAM
-#else
-#define FAST_RAM __attribute__((section(".ccmram")))
-#endif
-
-/* ########################## Assert Selection ############################## */
-/**
-  * @brief Uncomment the line below to expanse the "assert_param" macro in the 
-  *        HAL drivers code
-  */
-/* #define USE_FULL_ASSERT    1U */
+#ifndef TELEMETRY_SYSTEM_GPS_SERVICE_H
+#define TELEMETRY_SYSTEM_GPS_SERVICE_H
+#include <stdint.h>
+#include <stdbool.h>
+#include <data_struct_def.h>
 
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-void _Error_Handler(char *, int);
+void gps_service_init(void);
 
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
-#ifdef __cplusplus
-}
-#endif
+void gps_service_put_char_handle(void);
 
-#endif /* __MAIN_H__ */
+GPS_Data_t* gps_service_execute(void);
+
+#endif //TELEMETRY_SYSTEM_GPS_SERVICE_H

@@ -243,11 +243,14 @@ foreach(TYPE ${SELECT_BUILD})
                 src/components/cli/lib/cli_time.c
                 src/components/cli/cli_io.c
                 src/components/cli/cli.c
+                src/components/cli/ulog/ulog.c
 
                 src/components/sx1276/sx1276.c
-                src/mcu_module/sx1276-board.c
+                src/mcu_module/services/E19_lora_modem/sx1276-board.c
 
-                src/mcu_module/range_test.c)
+                src/mcu_module/services/range_test/range_test.c
+                src/components/minmea/minmea.c
+                src/mcu_module/services/gps/gps_service.c)
 
         SET(INC_FILE
                 Middlewares/Third_Party/FatFs/src
@@ -259,11 +262,18 @@ foreach(TYPE ${SELECT_BUILD})
 
                 src/components/cli
                 src/components/cli/lib
+                src/components/cli/ulog
 
                 src/mcu_module
                 src/mcu_module/device
 
-                src/components/sx1276)
+                src/components/sx1276
+                src/mcu_module/services/E19_lora_modem
+                src/mcu_module/services/range_test
+                src/mcu_module/services
+
+                src/components/minmea
+                src/mcu_module/services/gps)
 
 #####################################################################################################
 ## GROUND_STATION
@@ -307,6 +317,7 @@ foreach(TYPE ${SELECT_BUILD})
                 src/components/cli/lib/cli_time.c
                 src/components/cli/cli_io.c
                 src/components/cli/cli.c
+                src/components/cli/ulog/ulog.c
 
                 src/components/ssd1306/ssd1306.c
                 src/components/ssd1306/Fonts/Font_8x10.c
@@ -334,6 +345,7 @@ foreach(TYPE ${SELECT_BUILD})
 
                 src/components/cli
                 src/components/cli/lib
+                src/components/cli/ulog
 
                 src/components/ssd1306/
                 src/components/ssd1306/Fonts
@@ -359,7 +371,7 @@ target_include_directories(${BUILD_NAME} PRIVATE ${STM32_HAL_INC} ${INC_FILE})
 
 
 SET(CMAKE_EXE_LINKER_FLAGS
-    "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${PROJECT_BINARY_DIR}/${BUILD_NAME}-V${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}-${GIT_HASH}.map ${FPU_FLAGS}")
+    "${CMAKE_EXE_LINKER_FLAGS} -Wl,-u,_printf_float,-Map=${PROJECT_BINARY_DIR}/${BUILD_NAME}-V${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}-${GIT_HASH}.map ${FPU_FLAGS}")
 
 SET(HEX_FILE ${PROJECT_BINARY_DIR}/${BUILD_NAME}-V${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}-${GIT_HASH}.hex)
 SET(BIN_FILE ${PROJECT_BINARY_DIR}/${BUILD_NAME}-V${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}-${GIT_HASH}.bin)

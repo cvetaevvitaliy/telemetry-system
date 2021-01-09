@@ -121,9 +121,9 @@ void RangeTest_OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t sn
     SnrValue = snr;
     State = RX;
 
-    LOG_DEBUG("RSSI: %ddBm",RssiValue);
-    LOG_DEBUG("SNR: %ddb",SnrValue);
-    LOG_DEBUG("Payload: %s",Buffer);
+    ULOG_DEBUG("RSSI: %ddBm\n",RssiValue);
+    ULOG_DEBUG("SNR: %ddb\n",SnrValue);
+    ULOG_DEBUG("Payload: %s\n",Buffer);
 }
 
 void RangeTest_OnTxTimeout(void )
@@ -147,5 +147,5 @@ void RangeTest_OnRxError(void )
     sprintf(str, "RX Error: %d", error);
     State = RX;
 
-    LOG_ERROR("RX Error: %d", error);
+    ULOG_ERROR("RX Error: %d\n", error);
 }

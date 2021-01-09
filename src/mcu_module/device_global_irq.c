@@ -3,11 +3,19 @@
 #include "sx1276.h"
 #include "sx1276-board.h"
 #include "cli.h"
+#include "gps_service.h"
 
 
 extern TIM_HandleTypeDef htim11;
 extern TIM_HandleTypeDef htim13;
 extern TIM_HandleTypeDef htim14;
+
+extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
+extern DMA_HandleTypeDef hdma_usart1_rx;
+extern DMA_HandleTypeDef hdma_usart1_tx;
+extern DMA_HandleTypeDef hdma_usart2_rx;
+extern DMA_HandleTypeDef hdma_usart2_tx;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -70,7 +78,31 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 }
 
+
 void HAL_SYSTICK_Callback(void)
 {
     SysTick_CLI();
+}
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart == &huart1)
+        gps_service_put_char_handle();
+
+}
+
+
+void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart == &huart1)
+        gps_service_put_char_handle();
+    ULOG_ERROR("HAL_UART_RxHalfCpltCallback\n");
+}
+
+#include "hardware_init.h"
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+{
+    HAL_NVIC_SystemReset();
+    ULOG_ERROR("HAL_UART_ErrorCallback\n");
 }

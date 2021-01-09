@@ -44,7 +44,7 @@
 #define SEPARATOR                       ("\r\n-----------------------------------------------------------")
 
 // todo: need refactor this variable, maybe put to struct
-char output_print_buffer[128];
+char output_print_buffer[256];
 volatile uint64_t _tick;
 // need change address for another MCU, see datasheet for MCU (for stm32f4 0x1FFF7A10, stm32F1 0x1FFFF7E8)
 static volatile uint32_t *UniqueID = (uint32_t *) 0x1FFF7A10;
@@ -77,6 +77,7 @@ struct {
 static CLI_Result_t help_cmd();              // print help
 static CLI_Result_t reboot_mcu();            // reboot mcu
 static CLI_Result_t print_cli_w(void);       // print welcome screen
+static CLI_Result_t set_loglevel(void);      // set loglevel output
 // ************************************************************************
 
 // ************************** static function *****************************
@@ -128,6 +129,11 @@ CLI_Result_t sys_uptime(void)
 /** @brief Terminal initialize */
 void cli_init(void)
 {
+    /** Register external data logger */ // todo: need to integrate the logger into CLI
+    ULOG_INIT();
+    ULOG_SUBSCRIBE(console_logger, ULOG_DEBUG_LEVEL);
+    ULOG_INFO("Logger init\n");
+    /** ***************************** */
 
     cli_input_init();
 
@@ -139,6 +145,9 @@ void cli_init(void)
     cli_add_new_cmd("welcome", print_cli_w, 0, CLI_PrintNone, "CLI welcome message");
     cli_add_new_cmd("boottime", sys_uptime, 0, CLI_PrintStartTime, "System BootTime");
     cli_add_new_cmd("reboot", reboot_mcu, 0, CLI_PrintNone, "reboot MCU");
+#if (DEBUG == 1)
+    cli_add_new_cmd("loglevel", set_loglevel, 1, CLI_PrintNone, "for set LogLevel output");
+#endif
 
     CLI_PRINTF("\r\n");
 
@@ -252,6 +261,11 @@ void _split(char* strSrc, const char* separator, CLI_Params_t* dst)
 #define CLI_GetHexString(str) ((uint32_t)strtol((const char *)str, NULL, 16))
 #define CLI_GetArgString(str) ((uint32_t)_strcmp((const char *)str, NULL, 16))
 
+inline char* cli_get_arg(uint8_t index)
+{
+    return CLI_State_s.inputArgs.argv[index + 1];
+}
+
 /** @brief Get argument in Dec */
 inline uint32_t cli_get_arg_dec(uint8_t index)
 {
@@ -317,8 +331,10 @@ CLI_Result_t _execute_cli_cmd(char **argv, uint8_t argc)
 
     if ( cmd != NULL) {
 
-        if ((argc - 1) < cmd->argc )
-            return CLI_ArgErr;
+        if (cmd->argc != 0) {
+            if ( ((argc - 1) < cmd->argc) || ((argc - 1) != cmd->argc) )
+                return CLI_ArgErr;
+        }
 
         CLI_State_s.executeState = 1;
 
@@ -553,6 +569,65 @@ CLI_Result_t reboot_mcu(void)
 CLI_Result_t print_cli_w(void)
 {
     cli_welcome();
+    return CLI_OK;
+}
+
+__attribute__((unused))
+CLI_Result_t set_loglevel(void)
+{
+    uint8_t argv_0;
+    char *arg = cli_get_arg(0);
+
+    if (*arg == 0)
+        argv_0 = 0xFF;
+    else
+        argv_0 = cli_get_arg_dec(0);
+
+    switch (argv_0) {
+        case 1:
+            ULOG_UNSUBSCRIBE(console_logger);
+            ULOG_SUBSCRIBE(console_logger, ULOG_CRITICAL_LEVEL);
+            CLI_PRINTF("\nSET loglevel: NO OUTPUT");
+            break;
+        case 2:
+            ULOG_UNSUBSCRIBE(console_logger);
+            ULOG_SUBSCRIBE(console_logger, ULOG_ERROR_LEVEL);
+            CLI_PRINTF("\nSET loglevel: ERROR LEVEL");
+            break;
+        case 3:
+            ULOG_UNSUBSCRIBE(console_logger);
+            ULOG_SUBSCRIBE(console_logger, ULOG_WARNING_LEVEL);
+            CLI_PRINTF("\nSET loglevel: WARNING LEVEL");
+            break;
+        case 4:
+            ULOG_UNSUBSCRIBE(console_logger);
+            ULOG_SUBSCRIBE(console_logger, ULOG_INFO_LEVEL);
+            CLI_PRINTF("\nSET loglevel: INFO LEVEL");
+            break;
+        case 5:
+            ULOG_UNSUBSCRIBE(console_logger);
+            ULOG_SUBSCRIBE(console_logger, ULOG_DEBUG_LEVEL);
+            CLI_PRINTF("\nSET loglevel: DEBUG LEVEL");
+            break;
+        case 6:
+            ULOG_UNSUBSCRIBE(console_logger);
+            ULOG_SUBSCRIBE(console_logger, ULOG_TRACE_LEVEL);
+            CLI_PRINTF("\nSET loglevel: TRACE LEVEL");
+            break;
+
+        default: {
+            CLI_PRINTF("\nloglevel <arg>:\n"
+                       "\t1 - NO OUTPUT\n"
+                       "\t2 - ERROR LEVEL\n"
+                       "\t3 - WARNING LEVEL\n"
+                       "\t4 - INFO LEVEL\n"
+                       "\t5 - DEBUG LEVEL\n"
+                       "\t6 - TRACE_LEVEL\n");
+            return CLI_ArgErr;
+        }
+
+    }
+
     return CLI_OK;
 }
 

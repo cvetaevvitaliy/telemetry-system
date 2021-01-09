@@ -45,6 +45,7 @@
 #include "cli.h"
 #include "cli_io.h"
 #include "cli_time.h"
+#include "ulog.h"
 
 
 // ****************************** Code keys ********************************
@@ -122,7 +123,7 @@
 
 // *************************   IO CLI Settings    ***************************
 
-extern char output_print_buffer[128];
+extern char output_print_buffer[256];
 #define CLI_PRINTF(...)                         {sprintf(output_print_buffer,__VA_ARGS__);CLI_PrintStr(output_print_buffer);}
 #if (ECHO_EN == 1)
 #define CLI_PUT_CHAR                            CLI_PrintChar
