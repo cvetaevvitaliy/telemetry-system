@@ -270,6 +270,7 @@ foreach(TYPE ${SELECT_BUILD})
                 src/components/sx1276
                 src/mcu_module/services/E19_lora_modem
                 src/mcu_module/services/range_test
+                src/mcu_module/services
 
                 src/components/minmea
                 src/mcu_module/services/gps)

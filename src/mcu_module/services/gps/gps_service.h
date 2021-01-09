@@ -21,6 +21,7 @@
 #define TELEMETRY_SYSTEM_GPS_SERVICE_H
 #include <stdint.h>
 #include <stdbool.h>
+#include <data_struct_def.h>
 
 
 void gps_service_init(void);

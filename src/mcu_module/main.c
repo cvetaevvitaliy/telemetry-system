@@ -24,6 +24,7 @@
 #include "range_test.h"
 #include "cmsis_os.h"
 #include "gps_service.h"
+#include "data_struct_def.h"
 
 osThreadId cli_task_handle;
 osThreadId range_test_task_handle;
@@ -93,7 +94,7 @@ void gps_task(void const * argument)
 
         gps_service_execute();
 
-        osDelay(250);
+        osDelay(100);
     }
 }
 

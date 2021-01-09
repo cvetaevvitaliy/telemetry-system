@@ -39,34 +39,6 @@ typedef struct {
 } GPS_State_t;
 
 
-typedef struct {
-    int hours;
-    int minutes;
-    int seconds;
-} GPS_time_t ;
-
-typedef struct {
-    int day;
-    int month;
-    int year;
-} GPS_date_t ;
-
-typedef struct {
-    float latitude;
-    float longitude;
-    float gps_speed;
-    uint8_t sats;
-    uint8_t fix_quality;
-    uint8_t fix_type;
-    float hdop;
-    float pdop;
-    float vdop;
-    GPS_time_t time;
-    GPS_date_t date;
-
-} GPS_Data_t;
-
-
 static uint8_t ch;
 FAST_RAM GPS_State_t GPS_State = {0};
 GPS_Data_t GPS_Data = {0};
@@ -128,13 +100,13 @@ void _gps_parser(uint8_t *data)
                 GPS_Data.longitude = (float)minmea_tocoord(&frame.longitude);
                 GPS_Data.gps_speed = (float)minmea_tofloat(&frame.speed);
 
-                GPS_Data.time.hours = frame.time.hours;
-                GPS_Data.time.minutes = frame.time.minutes;
-                GPS_Data.time.seconds = frame.time.seconds;
+                GPS_Data.time.hours = (uint8_t)frame.time.hours;
+                GPS_Data.time.minutes = (uint8_t)frame.time.minutes;
+                GPS_Data.time.seconds = (uint8_t)frame.time.seconds;
 
-                GPS_Data.date.year = frame.date.year;
-                GPS_Data.date.month = frame.date.month;
-                GPS_Data.date.day = frame.date.day;
+                GPS_Data.date.year = (uint8_t)frame.date.year;
+                GPS_Data.date.month = (uint8_t)frame.date.month;
+                GPS_Data.date.day = (uint8_t)frame.date.day;
 
             }
         }
