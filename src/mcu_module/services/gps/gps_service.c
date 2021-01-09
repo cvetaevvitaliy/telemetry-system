@@ -151,9 +151,8 @@ void _gps_parser(uint8_t *data)
 }
 
 
-void gps_service_execute(void)
+GPS_Data_t* gps_service_execute(void)
 {
-    // todo: need implement push data to Queue
     if (GPS_State.data_ready == true) {
 
         ULOG_TRACE("Latitude: %f\n", GPS_Data.latitude);
@@ -169,7 +168,9 @@ void gps_service_execute(void)
         ULOG_TRACE("GPS Date: %02d.%02d.%d\n", GPS_Data.date.day, GPS_Data.date.month, GPS_Data.date.year);
 
         GPS_State.data_ready = false;
+        return &GPS_Data;
 
-    }
+    } else
+        return NULL;
 
 }

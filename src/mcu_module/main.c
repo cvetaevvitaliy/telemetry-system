@@ -89,10 +89,16 @@ void gps_task(void const * argument)
 {
     gps_service_init();
 
+
     while (1)
     {
 
-        gps_service_execute();
+        GPS_Data_t* GPS_Data = gps_service_execute();
+
+        if (GPS_Data != NULL){
+            // todo: need implement push data to Queue
+        }
+
 
         osDelay(100);
     }

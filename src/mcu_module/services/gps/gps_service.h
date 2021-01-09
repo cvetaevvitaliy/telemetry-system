@@ -28,6 +28,6 @@ void gps_service_init(void);
 
 void gps_service_put_char_handle(void);
 
-void gps_service_execute(void);
+GPS_Data_t* gps_service_execute(void);
 
 #endif //TELEMETRY_SYSTEM_GPS_SERVICE_H
