@@ -65,7 +65,33 @@ This software that is **open source** and is available free of charge without wa
 
 Big thanks to current contributors:
 
-- 
+------
+
+## How to build
+
+TODO
+
+```
+mkdir build
+cd build
+cmake -DBUILD=GROUND_STATION ..
+make -j
+make clean
+cmake -DBUILD=MCU_MODULE ..
+make -j
+make clean
+cmake -DBUILD=SERVO_MODULE ..
+make -j
+```
+
+
+### How to flash
+
+TODO
+
+example:
+
+```dfu-util -a 0 -s 0x08000000:leave -D ../../rocket/telemetry-system/build/MCU_MODULE-V0.0.1-f78256d4.bin```
 
 ------
 
