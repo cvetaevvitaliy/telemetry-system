@@ -75,8 +75,7 @@ static void _rem_char(void)
 
 void cli_input_refresh(const char* newCmd)
 {
-    CLI_PUT_CHAR('\r');
-    CLI_PRINTF(STRING_TERM_ARROW);
+    CLI_PRINTF("%c2K\r%s", CLI_KEY_CLEAR_LINE, STRING_TERM_ARROW);
 
     if (CLI_Input_s.CurBuffer->Data != newCmd)
     {
@@ -119,7 +118,7 @@ bool cli_input_is_empty(void)
 
 bool cli_input_is_full(void)
 {
-    return CLI_Input_s.CurBuffer->BufferCount >= CLI_CMD_BUF_SIZE;
+    return CLI_Input_s.CurBuffer->BufferCount == CLI_CMD_BUF_SIZE - 1;
 }
 
 void cli_input_rem_char(void)
@@ -227,7 +226,7 @@ CLI_InputValue_t cli_input_put_char(char c)
                         (c == CLI_KEY_BACKSPACE) ||
                         (c == CLI_KEY_ENTER)	||
                         (c == CHAR_INTERRUPT));
-    if ( (c != '\n') && (c != '\r')) // drop characters \r or \n
+    if ( (c != '\n') && (c != '\r') && (c != '\t')) // drop characters
         iv.isAlphaBet = c;
                     
     iv.keyCode = c;
