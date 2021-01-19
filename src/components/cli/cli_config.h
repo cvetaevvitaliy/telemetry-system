@@ -65,6 +65,7 @@
 #define CLI_KEY_END                             (_KEY_INIT(0xA1))   // End key
 #define CLI_KEY_TAB                             (_KEY_INIT(0x09))   // TAB key
 #define CLI_KEY_CLEAR_SCR                       (_KEY_INIT(0x0C))   // Clear screen CTRL+L
+#define CLI_KEY_CLEAR_LINE                      (_KEY_INIT(0x9B))   // clear line
 
 // **************************************************************************
 
@@ -97,9 +98,9 @@
 #define _TERM_VER_                              ("v0.0.2")          // CLI version
 #define CLI_SIZE_MAX_CMD                        (20)                // Max number of commands
 #define CLI_CMD_BUF_SIZE                        (20)                // Max number of character buffer string command
-#define CLI_CMD_LOG_SIZE                        (10)                // Max number of loging command
+#define CLI_CMD_LOG_SIZE                        (10)                // Max number of logging command
 #define CLI_ARGS_BUF_SIZE                       (10)                // Max number of arguments in one command
-#define CLI_ARG_SIZE                            (5)                 // Max number character of one arguments
+#define CLI_ARG_SIZE                            (10)                 // Max number character of one arguments
 #define CHAR_INTERRUPT                          (0x03)              // Abort execute command key-code symbol
 #define STRING_TERM_ENTER                       ("\n\r")            // String new line
 #define STRING_TERM_ARROW                       (">> ")             // String arrow enter

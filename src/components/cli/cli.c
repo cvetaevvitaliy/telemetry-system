@@ -51,7 +51,7 @@ static volatile uint32_t *UniqueID = (uint32_t *) 0x1FFF7A10;
 
 /** @brief Command settings */
 typedef struct {
-    uint8_t (*fcn)();                   // callback function command
+    CLI_Result_t (*fcn)();              // callback function command
     const char *name;                   // name command
     uint8_t argc;                       // min count argument
     uint16_t mode;                      // mode execute command
@@ -452,16 +452,16 @@ static void _print_result_exec(uint8_t code)
 {
     switch (code) {
         case CLI_NotFound:
-            CLI_PRINTF ("\n\rCommand not found");
+            CLI_PRINTF ("%s%c2KCommand not found", STRING_TERM_ENTER, CLI_KEY_CLEAR_LINE);
             break;
         case CLI_ArgErr:
-            CLI_PRINTF ("\n\rFault argument");
+            CLI_PRINTF ("%s%c2KFault argument", STRING_TERM_ENTER, CLI_KEY_CLEAR_LINE);
             break;
         case CLI_ExecErr:
-            CLI_PRINTF ("\n\rExecute functions");
+            CLI_PRINTF ("%s%c2KExecute functions", STRING_TERM_ENTER, CLI_KEY_CLEAR_LINE);
             break;
         case CLI_WorkInt:
-            CLI_PRINTF ("\n\rCommand abort");
+            CLI_PRINTF ("%s%c2KCommand abort", STRING_TERM_ENTER, CLI_KEY_CLEAR_LINE);
             break;
         default:
             break;
@@ -478,16 +478,16 @@ static void _print_result_add_cmd(uint8_t code)
 #if (CLI_PRINT_ERROR_ADD_CMD_EN == 1)
     switch (code) {
         case ADD_CMD_MaxCmd:
-            CLI_PRINTF ("\n\rAdd cmd err: Memory is full");
+            CLI_PRINTF ("%s%c2KMemory is full", STRING_TERM_ENTER, CLI_KEY_CLEAR_LINE);
             break;
         case ADD_CMD_FcnNull:
-            CLI_PRINTF ("\n\rAdd cmd err: Function callback is NULL");
+            CLI_PRINTF ("%s%c2KFunction callback is NULL", STRING_TERM_ENTER, CLI_KEY_CLEAR_LINE);
             break;
         case ADD_CMD_EmptyName:
-            CLI_PRINTF ("\n\rAdd cmd err: Empty name command");
+            CLI_PRINTF ("%s%c2KEmpty name command", STRING_TERM_ENTER, CLI_KEY_CLEAR_LINE);
             break;
         case ADD_CMD_RetryName:
-            CLI_PRINTF ("\n\rAdd cmd err: Retry name command");
+            CLI_PRINTF ("%s%c2KRetry name command", STRING_TERM_ENTER, CLI_KEY_CLEAR_LINE);
             break;
         default:
             break;
@@ -587,42 +587,42 @@ CLI_Result_t set_loglevel(void)
         case 1:
             ULOG_UNSUBSCRIBE(console_logger);
             ULOG_SUBSCRIBE(console_logger, ULOG_CRITICAL_LEVEL);
-            CLI_PRINTF("\nSET loglevel: NO OUTPUT");
+            CLI_PRINTF("%sSET loglevel: NO OUTPUT", STRING_TERM_ENTER);
             break;
         case 2:
             ULOG_UNSUBSCRIBE(console_logger);
             ULOG_SUBSCRIBE(console_logger, ULOG_ERROR_LEVEL);
-            CLI_PRINTF("\nSET loglevel: ERROR LEVEL");
+            CLI_PRINTF("%sSET loglevel: ERROR LEVEL", STRING_TERM_ENTER);
             break;
         case 3:
             ULOG_UNSUBSCRIBE(console_logger);
             ULOG_SUBSCRIBE(console_logger, ULOG_WARNING_LEVEL);
-            CLI_PRINTF("\nSET loglevel: WARNING LEVEL");
+            CLI_PRINTF("%sSET loglevel: WARNING LEVEL", STRING_TERM_ENTER);
             break;
         case 4:
             ULOG_UNSUBSCRIBE(console_logger);
             ULOG_SUBSCRIBE(console_logger, ULOG_INFO_LEVEL);
-            CLI_PRINTF("\nSET loglevel: INFO LEVEL");
+            CLI_PRINTF("%sSET loglevel: INFO LEVEL", STRING_TERM_ENTER);
             break;
         case 5:
             ULOG_UNSUBSCRIBE(console_logger);
             ULOG_SUBSCRIBE(console_logger, ULOG_DEBUG_LEVEL);
-            CLI_PRINTF("\nSET loglevel: DEBUG LEVEL");
+            CLI_PRINTF("%sSET loglevel: DEBUG LEVEL", STRING_TERM_ENTER);
             break;
         case 6:
             ULOG_UNSUBSCRIBE(console_logger);
             ULOG_SUBSCRIBE(console_logger, ULOG_TRACE_LEVEL);
-            CLI_PRINTF("\nSET loglevel: TRACE LEVEL");
+            CLI_PRINTF("%sSET loglevel: TRACE LEVEL", STRING_TERM_ENTER);
             break;
 
         default: {
-            CLI_PRINTF("\nloglevel <arg>:\n"
-                       "\t1 - NO OUTPUT\n"
-                       "\t2 - ERROR LEVEL\n"
-                       "\t3 - WARNING LEVEL\n"
-                       "\t4 - INFO LEVEL\n"
-                       "\t5 - DEBUG LEVEL\n"
-                       "\t6 - TRACE_LEVEL\n");
+            CLI_PRINTF("\n\rloglevel <arg>:\n\r"
+                       "\t1 - NO OUTPUT\n\r"
+                       "\t2 - ERROR LEVEL\n\r"
+                       "\t3 - WARNING LEVEL\n\r"
+                       "\t4 - INFO LEVEL\n\r"
+                       "\t5 - DEBUG LEVEL\n\r"
+                       "\t6 - TRACE_LEVEL\n\r");
             return CLI_ArgErr;
         }
 
