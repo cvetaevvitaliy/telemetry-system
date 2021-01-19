@@ -69,7 +69,7 @@ Big thanks to current contributors:
 
 ## How to build
 
-TODO
+*TODO: need update*
 
 ```
 mkdir build
@@ -83,15 +83,22 @@ make clean
 cmake -DBUILD=SERVO_MODULE ..
 make -j
 ```
+------
 
+## How to flash
 
-### How to flash
+*TODO: need update*
 
-TODO
+For flash via USB need use `dfu-util` - Device Firmware Upgrade Utilities <br>
+Install for Ubuntu  <br>
+`sudo apt install dfu-util` <br>
+Install for MacOS  <br>
+`brew install dfu-util` <br>
+Or build from source files <br>
+https://github.com/siemens/dfu-util
 
-example:
-
-```dfu-util -a 0 -s 0x08000000:leave -D ../../rocket/telemetry-system/build/MCU_MODULE-V0.0.1-f78256d4.bin```
+example of flash:
+```dfu-util -a 0 -s 0x08000000:leave -D your_firmware.bin```
 
 ------
 
