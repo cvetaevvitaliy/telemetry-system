@@ -28,6 +28,8 @@
 #define FAST_RAM __attribute__((section(".ccmram")))
 #endif
 
+#define MAGIC_DFU_VALUE                 (0x1A1B)
+
 /* ########################## Assert Selection ############################## */
 /**
   * @brief Uncomment the line below to expanse the "assert_param" macro in the 

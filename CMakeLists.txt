@@ -250,7 +250,8 @@ foreach(TYPE ${SELECT_BUILD})
 
                 src/mcu_module/services/range_test/range_test.c
                 src/components/minmea/minmea.c
-                src/mcu_module/services/gps/gps_service.c)
+                src/mcu_module/services/gps/gps_service.c
+                src/components/dfu/dfu.c)
 
         SET(INC_FILE
                 Middlewares/Third_Party/FatFs/src
@@ -273,7 +274,8 @@ foreach(TYPE ${SELECT_BUILD})
                 src/mcu_module/services
 
                 src/components/minmea
-                src/mcu_module/services/gps)
+                src/mcu_module/services/gps
+                src/components/dfu)
 
 #####################################################################################################
 ## GROUND_STATION
@@ -385,3 +387,6 @@ ${HEX_FILE}
 ${BIN_FILE}
 File details, format berkeley:")
 #####################################################################################################
+
+add_custom_command(TARGET ${BUILD_NAME} COMMENT "For flash via DFU use helper string:
+dfu-util -a 0 -s 0x08000000:leave -D ${BIN_FILE} -w")

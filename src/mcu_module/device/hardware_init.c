@@ -22,6 +22,7 @@
 #include "stm32f4xx_hal.h"
 #include "fatfs.h"
 #include "usb_device.h"
+#include "dfu.h"
 
 ADC_HandleTypeDef hadc1;
 
@@ -43,6 +44,8 @@ DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart2_rx;
 DMA_HandleTypeDef hdma_usart2_tx;
 
+RTC_HandleTypeDef hrtc;
+
 static void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
@@ -56,10 +59,16 @@ static void MX_USART2_UART_Init(void);
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void USB_Reset_GPIO(void);
 static void TIMER10_Init(void);
-
+static void MX_RTC_Init(void);
 
 void hardware_init(void)
 {
+
+    HAL_Init();
+    SystemClock_Config();
+    MX_RTC_Init();
+    dfu_check();
+
     HAL_Init();
 
     SystemClock_Config();
@@ -135,6 +144,16 @@ void SystemClock_Config(void)
 
     /* SysTick_IRQn interrupt configuration */
     HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+
+
+    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
+
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+    PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+    {
+        _Error_Handler(__FILE__, __LINE__);
+    }
 }
 
 /* ADC1 init function */
@@ -578,5 +597,25 @@ void HAL_ResumeTick(void)
 {
     /* Enable TIM6 Update interrupt */
     __HAL_TIM_ENABLE_IT(&htim6, TIM_IT_UPDATE);
+}
+
+/** RTC init  */
+void MX_RTC_Init(void)
+{
+
+    /**Initialize RTC Only
+    */
+    hrtc.Instance = RTC;
+    hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+    hrtc.Init.AsynchPrediv = 127;
+    hrtc.Init.SynchPrediv = 255;
+    hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+    hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+    hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+    if (HAL_RTC_Init(&hrtc) != HAL_OK)
+    {
+        _Error_Handler(__FILE__, __LINE__);
+    }
+
 }
 

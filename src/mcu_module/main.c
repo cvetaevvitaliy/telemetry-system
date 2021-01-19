@@ -25,6 +25,7 @@
 #include "cmsis_os.h"
 #include "gps_service.h"
 #include "data_struct_def.h"
+#include "dfu.h"
 
 #define QUEUE_SIZE                      (10)
 
@@ -48,6 +49,7 @@ int main(void)
     hardware_init();
 
     cli_init();
+    dfu_add_cli_cmd();
 
     osThreadDef(CLI_Task, cli_task, osPriorityLow, 0, 128);
     cli_task_handle = osThreadCreate(osThread(CLI_Task), NULL);
@@ -137,8 +139,8 @@ void transceiver_task(void const * argument)
         if (evt.status == osEventMessage) {
             receive_queue = evt.value.p;
             // for debug only todo: need implement sending data to air via protocol
-            ULOG_DEBUG("latitude: %f\n", receive_queue->latitude);
-            ULOG_DEBUG("longitude: %f\n", receive_queue->longitude);
+            //ULOG_DEBUG("latitude: %f\n", receive_queue->latitude);
+            //ULOG_DEBUG("longitude: %f\n", receive_queue->longitude);
             osPoolFree(gps_pool, receive_queue);
         }
 
