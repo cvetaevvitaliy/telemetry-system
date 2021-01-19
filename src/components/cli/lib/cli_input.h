@@ -84,28 +84,28 @@ void cli_input_refresh(const char* newCmd);
 /** @brief Add char to cache */
 CLI_InputValue_t cli_input_put_char(char c);
 
-/** @brief Send "chars key" delete buttom to user */
+/** @brief Send "chars key" delete button to user */
 void cli_input_delete(void);
 
-/** @brief Send "chars key" backspace buttom to user*/
+/** @brief Send "chars key" backspace button to user*/
 void cli_input_backspace(void);
 
-/** @brief Send "chars key"  home buttom to user */
+/** @brief Send "chars key"  home button to user */
 void cli_input_cursor_to_home(void);
 
-/** @brief Send "chars key"  end  buttom to user */
+/** @brief Send "chars key"  end  button to user */
 void cli_input_cursor_to_end();
 
-/** @brief Send "chars key"  jump cursor to numper chars user */
+/** @brief Send "chars key"  jump cursor to number chars user */
 void cli_input_cursor_to(uint16_t pos);
 
-/** @brief Send "chars key"  left buttom to user */
+/** @brief Send "chars key"  left button to user */
 void cli_input_cursor_to_left(void);
 
-/** @brief Send "chars key"  right buttom to user */
+/** @brief Send "chars key"  right button to user */
 void cli_input_cursor_to_right(void);
 
-/** @brief Send "chars key"  shift buttom  user */
+/** @brief Send "chars key"  shift button  user */
 void cli_input_cursor_shift(int16_t shift);
 
 #endif // _CLI_INPUT_H_
