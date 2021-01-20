@@ -388,5 +388,9 @@ ${BIN_FILE}
 File details, format berkeley:")
 #####################################################################################################
 
-add_custom_command(TARGET ${BUILD_NAME} COMMENT "For flash via DFU use helper string:
-dfu-util -a 0 -s 0x08000000:leave -D ${BIN_FILE} -w")
+add_custom_command(TARGET ${BUILD_NAME}
+        COMMENT "For flash via DFU use helper string: dfu-util -a 0 -s 0x08000000:leave -D ${BIN_FILE} -w
+Or use: make flash")
+
+add_custom_target(flash
+        COMMAND dfu-util -a 0 -s 0x08000000:leave -D ${BIN_FILE} -w)
