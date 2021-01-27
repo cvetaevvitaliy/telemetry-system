@@ -251,7 +251,10 @@ foreach(TYPE ${SELECT_BUILD})
                 src/mcu_module/services/range_test/range_test.c
                 src/components/minmea/minmea.c
                 src/mcu_module/services/gps/gps_service.c
-                src/components/dfu/dfu.c)
+                src/components/dfu/dfu.c
+
+                src/mcu_module/services/sd_card/sd_card.c
+                src/mcu_module/services/sd_card/sd_cli_cmd.c)
 
         SET(INC_FILE
                 Middlewares/Third_Party/FatFs/src
@@ -275,7 +278,9 @@ foreach(TYPE ${SELECT_BUILD})
 
                 src/components/minmea
                 src/mcu_module/services/gps
-                src/components/dfu)
+                src/components/dfu
+
+                src/mcu_module/services/sd_card)
 
 #####################################################################################################
 ## GROUND_STATION
