@@ -369,4 +369,10 @@ uint8_t BSP_SD_IsDetected(void)
 /* user code can be inserted here */
 /* USER CODE END AdditionalCode */
 
+void BSP_SD_DeInit(void)
+{
+    HAL_SD_DeInit(&hsd);
+}
+
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

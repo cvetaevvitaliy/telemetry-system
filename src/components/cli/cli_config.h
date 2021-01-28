@@ -97,10 +97,10 @@
 
 #define _TERM_VER_                              ("v0.0.2")          // CLI version
 #define CLI_SIZE_MAX_CMD                        (20)                // Max number of commands
-#define CLI_CMD_BUF_SIZE                        (20)                // Max number of character buffer string command
+#define CLI_CMD_BUF_SIZE                        (60)                // Max number of character buffer string command
 #define CLI_CMD_LOG_SIZE                        (10)                // Max number of logging command
 #define CLI_ARGS_BUF_SIZE                       (10)                // Max number of arguments in one command
-#define CLI_ARG_SIZE                            (10)                 // Max number character of one arguments
+#define CLI_ARG_SIZE                            (40)                // Max number character of one arguments
 #define CHAR_INTERRUPT                          (0x03)              // Abort execute command key-code symbol
 #define STRING_TERM_ENTER                       ("\n\r")            // String new line
 #define STRING_TERM_ARROW                       (">> ")             // String arrow enter

@@ -4,6 +4,7 @@
 #include "sx1276-board.h"
 #include "cli.h"
 #include "gps_service.h"
+#include "sd_card.h"
 
 
 extern TIM_HandleTypeDef htim11;
@@ -45,8 +46,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    switch (GPIO_Pin) {
-
+    switch (GPIO_Pin)
+    {
         case E19_DIO_0_Pin:
             SX1276OnDio0Irq();
             break;
@@ -69,6 +70,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
         case E19_DIO_5_Pin:
             SX1276OnDio5Irq();
+            break;
+
+        case SD_PRESET_Pin:
+            sd_card_insert_event();
             break;
 
         default:

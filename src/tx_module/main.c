@@ -26,6 +26,8 @@
 #include "gps_service.h"
 #include "data_struct_def.h"
 #include "dfu.h"
+#include "sd_card.h"
+#include "sd_cli_cmd.h"
 
 #define QUEUE_SIZE                      (10)
 
@@ -33,11 +35,13 @@ osThreadId cli_task_handle;
 osThreadId range_test_task_handle;
 osThreadId gps_task_handle;
 osThreadId transceiver_task_handle;
+osThreadId sd_card_task_handle;
 
 void cli_task(void const * argument);
 void range_test_task(void const * argument);
 void gps_task(void const * argument);
 void transceiver_task(void const * argument);
+void sd_card_task(void const * argument);
 
 osPoolDef(gps_pool, QUEUE_SIZE, GPS_Data_t);
 osPoolId  gps_pool;
@@ -63,9 +67,12 @@ int main(void)
     osThreadDef(transceiver_task, transceiver_task, osPriorityHigh, 0, 128);
     transceiver_task_handle = osThreadCreate(osThread(transceiver_task), NULL);
 
+    osThreadDef(sd_card_task, sd_card_task, osPriorityHigh, 0, 128);
+    sd_card_task_handle = osThreadCreate(osThread(sd_card_task), NULL);
+
     gps_pool = osPoolCreate(osPool(gps_pool));
     MsgBox_GPS = osMessageCreate(osMessageQ(MsgBox_GPS), NULL);
-
+    HAL_Delay(3000); // this delay for debug, for init USB
 
     osKernelStart();
 
@@ -77,6 +84,7 @@ int main(void)
     }
 
 }
+
 
 void cli_task(void const * argument)
 {
@@ -146,6 +154,30 @@ void transceiver_task(void const * argument)
 
     }
 
+}
+
+
+void sd_card_task(void const * argument)
+{
+    sd_card_init();
+    sd_card_cli_cmd_init();
+
+    SD_Card_State_t *sd_state = sd_card_get_state();
+
+    while (1)
+    {
+        if (sd_state->initialized == false && sd_state->insert == true)
+        {
+            osDelay(200);
+            sd_card_init();
+        }
+        if (sd_state->initialized == true && sd_state->insert == false)
+        {
+            sd_card_deinit();
+        }
+
+        osDelay(100);
+    }
 }
 
 

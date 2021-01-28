@@ -223,7 +223,7 @@ static void MX_SDIO_SD_Init(void)
     hsd.Init.ClockPowerSave = SDIO_CLOCK_POWER_SAVE_DISABLE;
     hsd.Init.BusWide = SDIO_BUS_WIDE_1B;
     hsd.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
-    hsd.Init.ClockDiv = 0;
+    hsd.Init.ClockDiv = 2;
 
 }
 
@@ -485,6 +485,15 @@ static void MX_GPIO_Init(void)
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(SD_PRESET_GPIO_Port, &GPIO_InitStruct);
+
+//    /*Configure GPIO pin : SD_PRESET_Pin */
+//    GPIO_InitStruct.Pin = SD_PRESET_Pin;
+//    GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+//    GPIO_InitStruct.Pull = GPIO_PULLUP;
+//    HAL_GPIO_Init(SD_PRESET_GPIO_Port, &GPIO_InitStruct);
+//
+//    HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
+//    HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 

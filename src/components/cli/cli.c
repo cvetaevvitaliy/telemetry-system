@@ -735,6 +735,7 @@ CLI_Append_Result_t cli_append_char(char ch)
             }
                 break;
 
+#if 0 // todo: need fix left & right button
             case CLI_KEY_LEFT:
                 cli_input_cursor_to_left();
                 break;
@@ -742,6 +743,7 @@ CLI_Append_Result_t cli_append_char(char ch)
             case CLI_KEY_RIGHT:
                 cli_input_cursor_to_right();
                 break;
+#endif
 
             case CLI_KEY_DEL:
                 cli_input_delete();

@@ -226,7 +226,7 @@ CLI_InputValue_t cli_input_put_char(char c)
                         (c == CLI_KEY_BACKSPACE) ||
                         (c == CLI_KEY_ENTER)	||
                         (c == CHAR_INTERRUPT));
-    if ( (c != '\n') && (c != '\r') && (c != '\t')) // drop characters
+    if ( (c != '\n') && (c != '\r')) // drop characters
         iv.isAlphaBet = c;
                     
     iv.keyCode = c;

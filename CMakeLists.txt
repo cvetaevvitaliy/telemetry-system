@@ -106,56 +106,56 @@ add_definitions(-D__weak=__attribute__\(\(weak\)\)
 # STM HAL Library
 
 SET(STM32_HAL_INC
-        Middlewares/ST/STM32_USB_Device_Library/Core/Inc
-        Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc
-        Drivers/STM32F4xx_HAL_Driver/Inc
-        Drivers/STM32F4xx_HAL_Driver/Inc/Legacy
-        Drivers/CMSIS/Include
-        Drivers/CMSIS/Device/ST/STM32F4xx/Include )
+        stm32_lib/STM32_USB_Device_Library/Core/Inc
+        stm32_lib/STM32_USB_Device_Library/Class/CDC/Inc
+        stm32_lib/STM32F4xx_HAL_Driver/Inc
+        stm32_lib/STM32F4xx_HAL_Driver/Inc/Legacy
+        stm32_lib/CMSIS/Include
+        stm32_lib/CMSIS/Device/ST/STM32F4xx/Include )
 
 SET(STM32_HAL_SRC
-        startup/startup_stm32f405xx.s
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c
-        Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c
+        stm32_lib/startup/startup_stm32f405xx.s
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c
+        stm32_lib/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c
 
-        Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c
-        Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
-        Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
-        Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c)
+        stm32_lib/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c
+        stm32_lib/STM32_USB_Device_Library/Core/Src/usbd_core.c
+        stm32_lib/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
+        stm32_lib/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c)
 
 # FAT_FS Library
 SET(FAT_FS_SRC
-        Middlewares/Third_Party/FatFs/src/option/syscall.c
-        Middlewares/Third_Party/FatFs/src/diskio.c
-        Middlewares/Third_Party/FatFs/src/ff.c
-        Middlewares/Third_Party/FatFs/src/ff_gen_drv.c )
+        src/3rd-partry/FatFs/src/option/syscall.c
+        src/3rd-partry/FatFs/src/diskio.c
+        src/3rd-partry/FatFs/src/ff.c
+        src/3rd-partry/FatFs/src/ff_gen_drv.c )
 
-SET(FAT_FS_INC Middlewares/Third_Party/FatFs/src)
+SET(FAT_FS_INC src/3rd-partry/FatFs/src)
 
 # FreeRTOS source
 SET(FreeRTOS_SRC
@@ -177,9 +177,9 @@ SET(FreeRTOS_INC
         src/3rd-partry/FreeRTOS/CMSIS_RTOS)
 
 ####################################################################################################
-# Select build: SERVO_MODULE, MCU_MODULE or GROUND_STATION, please add to CMake config -DBUILD=<name>
+# Select build: SERVO_MODULE, TX_MODULE or GROUND_STATION, please add to CMake config -DBUILD=<name>
 
-set(SELECT_BUILD GROUND_STATION MCU_MODULE SERVO_MODULE)
+set(SELECT_BUILD GROUND_STATION TX_MODULE SERVO_MODULE)
 SET(BUILD_NAME BUILD_NAME)
 foreach(TYPE ${SELECT_BUILD})
 #####################################################################################################
@@ -204,35 +204,35 @@ foreach(TYPE ${SELECT_BUILD})
 
 
 #####################################################################################################
-## MCU_MODULE
-    elseif(BUILD STREQUAL MCU_MODULE)
-        message(MCU_MODULE)
-        SET(BUILD_NAME MCU_MODULE)
-        add_definitions(-DBUILD_NAME=\"MCU\ MODULE\t\")
+## TX_MODULE
+    elseif(BUILD STREQUAL TX_MODULE)
+        message(TX_MODULE)
+        SET(BUILD_NAME TX_MODULE)
+        add_definitions(-DBUILD_NAME=\"TX\ MODULE\t\")
 
         SET(SRC_FILE
-                Middlewares/Third_Party/FatFs/src/option/syscall.c
-                Middlewares/Third_Party/FatFs/src/diskio.c
-                Middlewares/Third_Party/FatFs/src/ff.c
-                Middlewares/Third_Party/FatFs/src/ff_gen_drv.c
+                src/3rd-partry/FatFs/src/option/syscall.c
+                src/3rd-partry/FatFs/src/diskio.c
+                src/3rd-partry/FatFs/src/ff.c
+                src/3rd-partry/FatFs/src/ff_gen_drv.c
 
                 ${FreeRTOS_SRC}
 
-                src/mcu_module/main.c
-                src/mcu_module/device/hardware_init.c
-                src/mcu_module/device_global_irq.c
+                src/tx_module/main.c
+                src/tx_module/device/hardware_init.c
+                src/tx_module/device_global_irq.c
 
 
-                src/mcu_module/device/bsp_driver_sd.c
-                src/mcu_module/device/fatfs.c
-                src/mcu_module/device/sd_diskio.c
-                src/mcu_module/device/stm32f4xx_hal_msp.c
-                src/mcu_module/device/stm32f4xx_it.c
-                src/mcu_module/device/system_stm32f4xx.c
-                src/mcu_module/device/usb_device.c
-                src/mcu_module/device/usbd_cdc_if.c
-                src/mcu_module/device/usbd_conf.c
-                src/mcu_module/device/usbd_desc.c
+                src/tx_module/device/bsp_driver_sd.c
+                src/tx_module/device/fatfs.c
+                src/tx_module/device/sd_diskio.c
+                src/tx_module/device/stm32f4xx_hal_msp.c
+                src/tx_module/device/stm32f4xx_it.c
+                src/tx_module/device/system_stm32f4xx.c
+                src/tx_module/device/usb_device.c
+                src/tx_module/device/usbd_cdc_if.c
+                src/tx_module/device/usbd_conf.c
+                src/tx_module/device/usbd_desc.c
 
                 src/3rd-partry/helper-library/tinyprintf/tinyprintf.c
                 src/3rd-partry/helper-library/tinystring/tinystring.c
@@ -246,15 +246,18 @@ foreach(TYPE ${SELECT_BUILD})
                 src/components/cli/ulog/ulog.c
 
                 src/components/sx1276/sx1276.c
-                src/mcu_module/services/E19_lora_modem/sx1276-board.c
+                src/tx_module/services/E19_lora_modem/sx1276-board.c
 
-                src/mcu_module/services/range_test/range_test.c
+                src/tx_module/services/range_test/range_test.c
                 src/components/minmea/minmea.c
-                src/mcu_module/services/gps/gps_service.c
-                src/components/dfu/dfu.c)
+                src/tx_module/services/gps/gps_service.c
+                src/components/dfu/dfu.c
+
+                src/tx_module/services/sd_card/sd_card.c
+                src/tx_module/services/sd_card/sd_cli_cmd.c)
 
         SET(INC_FILE
-                Middlewares/Third_Party/FatFs/src
+                src/3rd-partry/FatFs/src
 
                 ${FreeRTOS_INC}
 
@@ -265,17 +268,19 @@ foreach(TYPE ${SELECT_BUILD})
                 src/components/cli/lib
                 src/components/cli/ulog
 
-                src/mcu_module
-                src/mcu_module/device
+                src/tx_module
+                src/tx_module/device
 
                 src/components/sx1276
-                src/mcu_module/services/E19_lora_modem
-                src/mcu_module/services/range_test
-                src/mcu_module/services
+                src/tx_module/services/E19_lora_modem
+                src/tx_module/services/range_test
+                src/tx_module/services
 
                 src/components/minmea
-                src/mcu_module/services/gps
-                src/components/dfu)
+                src/tx_module/services/gps
+                src/components/dfu
+
+                src/tx_module/services/sd_card)
 
 #####################################################################################################
 ## GROUND_STATION
@@ -285,10 +290,10 @@ foreach(TYPE ${SELECT_BUILD})
         add_definitions(-DBUILD_NAME=\"GROUND\ STATION\")
 
         SET(SRC_FILE
-                Middlewares/Third_Party/FatFs/src/option/syscall.c
-                Middlewares/Third_Party/FatFs/src/diskio.c
-                Middlewares/Third_Party/FatFs/src/ff.c
-                Middlewares/Third_Party/FatFs/src/ff_gen_drv.c
+                src/3rd-partry/FatFs/src/option/syscall.c
+                src/3rd-partry/FatFs/src/diskio.c
+                src/3rd-partry/FatFs/src/ff.c
+                src/3rd-partry/FatFs/src/ff_gen_drv.c
 
                 ${FreeRTOS_SRC}
 
@@ -333,7 +338,7 @@ foreach(TYPE ${SELECT_BUILD})
                 ####################################################################################################
 
         SET(INC_FILE
-                Middlewares/Third_Party/FatFs/src
+                src/3rd-partry/FatFs/src
 
                 ${FreeRTOS_INC}
                 src/ground_station
