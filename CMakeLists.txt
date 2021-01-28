@@ -177,9 +177,9 @@ SET(FreeRTOS_INC
         src/3rd-partry/FreeRTOS/CMSIS_RTOS)
 
 ####################################################################################################
-# Select build: SERVO_MODULE, MCU_MODULE or GROUND_STATION, please add to CMake config -DBUILD=<name>
+# Select build: SERVO_MODULE, TX_MODULE or GROUND_STATION, please add to CMake config -DBUILD=<name>
 
-set(SELECT_BUILD GROUND_STATION MCU_MODULE SERVO_MODULE)
+set(SELECT_BUILD GROUND_STATION TX_MODULE SERVO_MODULE)
 SET(BUILD_NAME BUILD_NAME)
 foreach(TYPE ${SELECT_BUILD})
 #####################################################################################################
@@ -204,11 +204,11 @@ foreach(TYPE ${SELECT_BUILD})
 
 
 #####################################################################################################
-## MCU_MODULE
-    elseif(BUILD STREQUAL MCU_MODULE)
-        message(MCU_MODULE)
-        SET(BUILD_NAME MCU_MODULE)
-        add_definitions(-DBUILD_NAME=\"MCU\ MODULE\t\")
+## TX_MODULE
+    elseif(BUILD STREQUAL TX_MODULE)
+        message(TX_MODULE)
+        SET(BUILD_NAME TX_MODULE)
+        add_definitions(-DBUILD_NAME=\"TX\ MODULE\t\")
 
         SET(SRC_FILE
                 src/3rd-partry/FatFs/src/option/syscall.c
@@ -218,21 +218,21 @@ foreach(TYPE ${SELECT_BUILD})
 
                 ${FreeRTOS_SRC}
 
-                src/mcu_module/main.c
-                src/mcu_module/device/hardware_init.c
-                src/mcu_module/device_global_irq.c
+                src/tx_module/main.c
+                src/tx_module/device/hardware_init.c
+                src/tx_module/device_global_irq.c
 
 
-                src/mcu_module/device/bsp_driver_sd.c
-                src/mcu_module/device/fatfs.c
-                src/mcu_module/device/sd_diskio.c
-                src/mcu_module/device/stm32f4xx_hal_msp.c
-                src/mcu_module/device/stm32f4xx_it.c
-                src/mcu_module/device/system_stm32f4xx.c
-                src/mcu_module/device/usb_device.c
-                src/mcu_module/device/usbd_cdc_if.c
-                src/mcu_module/device/usbd_conf.c
-                src/mcu_module/device/usbd_desc.c
+                src/tx_module/device/bsp_driver_sd.c
+                src/tx_module/device/fatfs.c
+                src/tx_module/device/sd_diskio.c
+                src/tx_module/device/stm32f4xx_hal_msp.c
+                src/tx_module/device/stm32f4xx_it.c
+                src/tx_module/device/system_stm32f4xx.c
+                src/tx_module/device/usb_device.c
+                src/tx_module/device/usbd_cdc_if.c
+                src/tx_module/device/usbd_conf.c
+                src/tx_module/device/usbd_desc.c
 
                 src/3rd-partry/helper-library/tinyprintf/tinyprintf.c
                 src/3rd-partry/helper-library/tinystring/tinystring.c
@@ -246,15 +246,15 @@ foreach(TYPE ${SELECT_BUILD})
                 src/components/cli/ulog/ulog.c
 
                 src/components/sx1276/sx1276.c
-                src/mcu_module/services/E19_lora_modem/sx1276-board.c
+                src/tx_module/services/E19_lora_modem/sx1276-board.c
 
-                src/mcu_module/services/range_test/range_test.c
+                src/tx_module/services/range_test/range_test.c
                 src/components/minmea/minmea.c
-                src/mcu_module/services/gps/gps_service.c
+                src/tx_module/services/gps/gps_service.c
                 src/components/dfu/dfu.c
 
-                src/mcu_module/services/sd_card/sd_card.c
-                src/mcu_module/services/sd_card/sd_cli_cmd.c)
+                src/tx_module/services/sd_card/sd_card.c
+                src/tx_module/services/sd_card/sd_cli_cmd.c)
 
         SET(INC_FILE
                 src/3rd-partry/FatFs/src
@@ -268,19 +268,19 @@ foreach(TYPE ${SELECT_BUILD})
                 src/components/cli/lib
                 src/components/cli/ulog
 
-                src/mcu_module
-                src/mcu_module/device
+                src/tx_module
+                src/tx_module/device
 
                 src/components/sx1276
-                src/mcu_module/services/E19_lora_modem
-                src/mcu_module/services/range_test
-                src/mcu_module/services
+                src/tx_module/services/E19_lora_modem
+                src/tx_module/services/range_test
+                src/tx_module/services
 
                 src/components/minmea
-                src/mcu_module/services/gps
+                src/tx_module/services/gps
                 src/components/dfu
 
-                src/mcu_module/services/sd_card)
+                src/tx_module/services/sd_card)
 
 #####################################################################################################
 ## GROUND_STATION
