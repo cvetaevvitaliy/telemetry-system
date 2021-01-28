@@ -30,19 +30,42 @@ uint8_t sd_card_cli_cmd_init(void)
     return res;
 }
 
+void _sd_not_initialized(void)
+{
+    CLI_PRINTF("\nSD not initialized\n")
+}
+
 
 CLI_Result_t sd_cli_format(void)
 {
-    CLI_PRINTF("\n")
-    sd_card_format();
+    SD_Card_State_t *sd = sd_card_get_state();
+
+    if (sd->initialized)
+    {
+        CLI_PRINTF("\n")
+        sd_card_format();
+    }
+    else
+    {
+        _sd_not_initialized();
+    }
 
     return CLI_OK;
 }
 
 CLI_Result_t sd_cli_info(void)
 {
-    CLI_PRINTF("\n")
-    sd_card_info();
+    SD_Card_State_t *sd = sd_card_get_state();
+
+    if (sd->initialized)
+    {
+        CLI_PRINTF("\n")
+        sd_card_info();
+    }
+    else
+    {
+        _sd_not_initialized();
+    }
 
     return CLI_OK;
 }
@@ -80,6 +103,14 @@ FRESULT scan_files (char* path)
 
 CLI_Result_t sd_cli_list_dir(void)
 {
+
+    SD_Card_State_t *sd = sd_card_get_state();
+
+    if (!sd->initialized)
+    {
+        _sd_not_initialized();
+        return CLI_OK;
+    }
     FRESULT res;
 
     CLI_PRINTF("\n")
@@ -102,6 +133,15 @@ CLI_Result_t sd_cli_list_dir(void)
 
 CLI_Result_t sd_cli_cat_file(void)
 {
+
+    SD_Card_State_t *sd = sd_card_get_state();
+
+    if (!sd->initialized)
+    {
+        _sd_not_initialized();
+        return CLI_OK;
+    }
+
     CLI_PRINTF("\n")
     FRESULT res;
 
