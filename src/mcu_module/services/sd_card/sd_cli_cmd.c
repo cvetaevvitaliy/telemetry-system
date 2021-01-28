@@ -6,7 +6,9 @@
 static CLI_Result_t sd_cli_format(void);
 static CLI_Result_t sd_cli_info(void);
 static CLI_Result_t sd_cli_list_dir(void);
+static CLI_Result_t sd_cli_cat_file(void);
 
+static char readBuff[512] = {0};
 
 uint8_t sd_card_cli_cmd_init(void)
 {
@@ -23,6 +25,7 @@ uint8_t sd_card_cli_cmd_init(void)
     res = cli_add_new_cmd("sd_format", sd_cli_format, 1, 0, "Format SD card");
     res = cli_add_new_cmd("sd_info", sd_cli_info, 1, 0, "Info SD card");
     res = cli_add_new_cmd("sd_list", sd_cli_list_dir, 1, 0, "List dir in the SD card");
+    res = cli_add_new_cmd("sd_cat", sd_cli_cat_file, 1, 0, "Display file on screen");
 
     return res;
 }
@@ -65,7 +68,7 @@ FRESULT scan_files (char* path)
             }
             else
             {
-                CLI_PRINTF("%10lu bytes\t%s\n", sd_state->finfo.fsize, sd_state->finfo.fname);
+                CLI_PRINTF(" %10lu bytes\t%s\n", sd_state->finfo.fsize, sd_state->finfo.fname);
             }
             HAL_Delay(10);
         }
@@ -93,6 +96,40 @@ CLI_Result_t sd_cli_list_dir(void)
     {
         CLI_PRINTF("\nDirectory not found\n");
     }
+
+    return CLI_OK;
+}
+
+CLI_Result_t sd_cli_cat_file(void)
+{
+    CLI_PRINTF("\n")
+    FRESULT res;
+
+    char *arg = cli_get_arg(0);
+
+    SD_Card_State_t *sd_state = sd_card_get_state();
+
+    res = f_open(&sd_state->fd, arg, FA_READ);
+
+    if (res != FR_OK)
+    {
+        CLI_PRINTF("\nError open file\n");
+        return CLI_OK;
+    }
+
+    memset(readBuff, 0, sizeof(readBuff));
+
+    uint16_t lines;
+    for (lines = 0; (f_eof(&sd_state->fd) == 0); lines++)
+    {
+        f_gets((char*)readBuff, sizeof(readBuff), &sd_state->fd);
+        CLI_PRINTF("%s", readBuff);
+        HAL_Delay(50);
+    }
+    CLI_PRINTF("\nRead %d lines\n", lines);
+
+
+    f_close(&sd_state->fd);
 
     return CLI_OK;
 }
