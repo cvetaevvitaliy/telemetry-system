@@ -43,12 +43,12 @@ jobs:
       shell: bash
       run: make clean
 
-    - name: Configure CMake project - Build MCU MODULE
+    - name: Configure CMake project - Build TX MODULE
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
-      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -D_WHERE_BUILD=Cloud -DBUILD=MCU_MODULE ..
+      run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -D_WHERE_BUILD=Cloud -DBUILD=TX_MODULE ..
 
-    - name: Build MCU MODULE
+    - name: Build TX MODULE
       working-directory: ${{runner.workspace}}/telemetry-system/build
       shell: bash
       run: make -j11
