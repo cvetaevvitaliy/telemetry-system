@@ -190,17 +190,17 @@ foreach(TYPE ${SELECT_BUILD})
 
         SET(SRC_FILE
                 src/servo_module/main.c
-                src/servo_module/device/stm32f4xx_hal_msp.c
-                src/servo_module/device/stm32f4xx_it.c
-                src/servo_module/device/system_stm32f4xx.c
-                src/servo_module/device/usb_device.c
-                src/servo_module/device/usbd_cdc_if.c
-                src/servo_module/device/usbd_conf.c
-                src/servo_module/device/usbd_desc.c)
+                src/servo_module/stm32_hal_config/stm32f4xx_hal_msp.c
+                src/servo_module/stm32_hal_config/stm32f4xx_it.c
+                src/servo_module/stm32_hal_config/system_stm32f4xx.c
+                src/servo_module/stm32_hal_config/usb_device.c
+                src/servo_module/stm32_hal_config/usbd_cdc_if.c
+                src/servo_module/stm32_hal_config/usbd_conf.c
+                src/servo_module/stm32_hal_config/usbd_desc.c)
 
         SET(INC_FILE
                 src/servo_module
-                src/servo_module/device)
+                src/servo_module/stm32_hal_config)
 
 
 #####################################################################################################
@@ -219,20 +219,20 @@ foreach(TYPE ${SELECT_BUILD})
                 ${FreeRTOS_SRC}
 
                 src/tx_module/main.c
-                src/tx_module/device/hardware_init.c
+                src/tx_module/stm32_hal_config/hardware_init.c
                 src/tx_module/device_global_irq.c
 
 
-                src/tx_module/device/bsp_driver_sd.c
-                src/tx_module/device/fatfs.c
-                src/tx_module/device/sd_diskio.c
-                src/tx_module/device/stm32f4xx_hal_msp.c
-                src/tx_module/device/stm32f4xx_it.c
-                src/tx_module/device/system_stm32f4xx.c
-                src/tx_module/device/usb_device.c
-                src/tx_module/device/usbd_cdc_if.c
-                src/tx_module/device/usbd_conf.c
-                src/tx_module/device/usbd_desc.c
+                src/tx_module/stm32_hal_config/bsp_driver_sd.c
+                src/tx_module/stm32_hal_config/fatfs.c
+                src/tx_module/stm32_hal_config/sd_diskio.c
+                src/tx_module/stm32_hal_config/stm32f4xx_hal_msp.c
+                src/tx_module/stm32_hal_config/stm32f4xx_it.c
+                src/tx_module/stm32_hal_config/system_stm32f4xx.c
+                src/tx_module/stm32_hal_config/usb_device.c
+                src/tx_module/stm32_hal_config/usbd_cdc_if.c
+                src/tx_module/stm32_hal_config/usbd_conf.c
+                src/tx_module/stm32_hal_config/usbd_desc.c
 
                 src/3rd-partry/helper-library/tinyprintf/tinyprintf.c
                 src/3rd-partry/helper-library/tinystring/tinystring.c
@@ -269,7 +269,7 @@ foreach(TYPE ${SELECT_BUILD})
                 src/components/cli/ulog
 
                 src/tx_module
-                src/tx_module/device
+                src/tx_module/stm32_hal_config
 
                 src/components/sx1276
                 src/tx_module/services/E19_lora_modem
@@ -298,19 +298,19 @@ foreach(TYPE ${SELECT_BUILD})
                 ${FreeRTOS_SRC}
 
                 src/ground_station/main.c
-                src/ground_station/device/hardware_init.c
+                src/ground_station/stm32_hal_config/hardware_init.c
                 src/ground_station/device_global_irq.c
 
-                src/ground_station/device/bsp_driver_sd.c
-                src/ground_station/device/fatfs.c
-                src/ground_station/device/sd_diskio.c
-                src/ground_station/device/stm32f4xx_hal_msp.c
-                src/ground_station/device/stm32f4xx_it.c
-                src/ground_station/device/system_stm32f4xx.c
-                src/ground_station/device/usb_device.c
-                src/ground_station/device/usbd_cdc_if.c
-                src/ground_station/device/usbd_conf.c
-                src/ground_station/device/usbd_desc.c
+                src/ground_station/stm32_hal_config/bsp_driver_sd.c
+                src/ground_station/stm32_hal_config/fatfs.c
+                src/ground_station/stm32_hal_config/sd_diskio.c
+                src/ground_station/stm32_hal_config/stm32f4xx_hal_msp.c
+                src/ground_station/stm32_hal_config/stm32f4xx_it.c
+                src/ground_station/stm32_hal_config/system_stm32f4xx.c
+                src/ground_station/stm32_hal_config/usb_device.c
+                src/ground_station/stm32_hal_config/usbd_cdc_if.c
+                src/ground_station/stm32_hal_config/usbd_conf.c
+                src/ground_station/stm32_hal_config/usbd_desc.c
 
                 ####################################################################################################
                 # Device source codes
@@ -342,7 +342,7 @@ foreach(TYPE ${SELECT_BUILD})
 
                 ${FreeRTOS_INC}
                 src/ground_station
-                src/ground_station/device
+                src/ground_station/stm32_hal_config
 
                 ####################################################################################################
                 # Device include directories
