@@ -44,7 +44,7 @@ For details see [WiKi - Ground station (RX)](https://github.com/cvetaevvitaliy/t
 This is a module that includes separate PCB modules for scalability:
 
 - GPS module (Matek M8Q) and SMA connectors for antennas
-- MCU module: LoRa transceiver (E19-868M30S)  - 1W power output, MCU STM32F405, logging data to MicroSD card (black box)
+- TX module: LoRa transceiver (E19-868M30S)  - 1W power output, MCU STM32F405, logging data to MicroSD card (black box)
 - IMU module ( acc, gyro, pressure, sensor )
 - Servo module - to control flight stabilization (MCU STM32F405)
 - Power module - for power supply of all modules
@@ -53,23 +53,9 @@ For details see [WiKi - Transmitting module (RX)](https://github.com/cvetaevvita
 
 ------
 
-## Releases
-
-[Open releases versions ](https://github.com/cvetaevvitaliy/telemetry-system/releases)
-
-------
-
-## Open Source / Contributors
-
-This software that is **open source** and is available free of charge without warranty to all users.
-
-Big thanks to current contributors:
-
-------
-
 ## How to build
 
-*TODO: need update*
+*Depends:* `gcc-arm-none-eabi` `cmake`
 
 ```
 mkdir build
@@ -77,7 +63,7 @@ cd build
 cmake -DBUILD=GROUND_STATION ..
 make -j
 make clean
-cmake -DBUILD=MCU_MODULE ..
+cmake -DBUILD=TX_MODULE ..
 make -j
 make clean
 cmake -DBUILD=SERVO_MODULE ..
@@ -92,13 +78,31 @@ make -j
 For flash via USB need use `dfu-util` - Device Firmware Upgrade Utilities <br>
 Install for Ubuntu  <br>
 `sudo apt install dfu-util` <br>
+
 Install for MacOS  <br>
 `brew install dfu-util` <br>
+
 Or build from source files <br>
 https://github.com/siemens/dfu-util
 
 example of flash:
 ```dfu-util -a 0 -s 0x08000000:leave -D your_firmware.bin```
+
+or use `make flash` command after build firmware 
+
+------
+
+## Releases
+
+[Open releases versions ](https://github.com/cvetaevvitaliy/telemetry-system/releases)
+
+------
+
+## Open Source / Contributors
+
+This software that is **open source** and is available free of charge without warranty to all users.
+
+Big thanks to current contributors:
 
 ------
 
