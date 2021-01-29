@@ -151,11 +151,12 @@ SET(STM32_HAL_SRC
 # FAT_FS Library
 SET(FAT_FS_SRC
         src/3rd-partry/FatFs/src/option/syscall.c
+        src/3rd-partry/FatFs/src/option/ccsbcs.c
         src/3rd-partry/FatFs/src/diskio.c
         src/3rd-partry/FatFs/src/ff.c
         src/3rd-partry/FatFs/src/ff_gen_drv.c )
 
-SET(FAT_FS_INC src/3rd-partry/FatFs/src)
+SET(FAT_FS_INC src/3rd-partry/FatFs/src src/3rd-partry/FatFs/src/option )
 
 # FreeRTOS source
 SET(FreeRTOS_SRC
@@ -211,10 +212,7 @@ foreach(TYPE ${SELECT_BUILD})
         add_definitions(-DBUILD_NAME=\"TX\ MODULE\t\")
 
         SET(SRC_FILE
-                src/3rd-partry/FatFs/src/option/syscall.c
-                src/3rd-partry/FatFs/src/diskio.c
-                src/3rd-partry/FatFs/src/ff.c
-                src/3rd-partry/FatFs/src/ff_gen_drv.c
+                ${FAT_FS_SRC}
 
                 ${FreeRTOS_SRC}
 
@@ -257,7 +255,7 @@ foreach(TYPE ${SELECT_BUILD})
                 src/tx_module/services/sd_card/sd_cli_cmd.c)
 
         SET(INC_FILE
-                src/3rd-partry/FatFs/src
+                ${FAT_FS_INC}
 
                 ${FreeRTOS_INC}
 
