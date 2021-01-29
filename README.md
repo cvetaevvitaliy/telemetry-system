@@ -53,6 +53,30 @@ For details see [WiKi - Transmitting module (RX)](https://github.com/cvetaevvita
 
 ------
 
+### Protocol specifications
+
+***
+
+In order not to reinvent the "wheel", the UBX protocol was taken as basis and simplified for the current requirements:
+
+- simplicity
+
+- scalability
+
+- short messages to minimize air latency
+
+In protocol not included  ACK and NAK - since this is an overhead in time, if the parcel was not received by the ground station, it's okay, we will received the next message, but will not waste time transmitting package: "success received"
+
+It consists of six blocks, as shown in the picture
+
+![](https://github.com/cvetaevvitaliy/telemetry-system/blob/master/doc/pic/Protocol_RX-TX.png)
+
+
+You can read more information here [WiKi page - Protocol specifications](https://github.com/cvetaevvitaliy/telemetry-system/wiki/Protocol-specifications)
+
+
+------
+
 ## How to build
 
 *Depends:* `gcc-arm-none-eabi` `cmake`
