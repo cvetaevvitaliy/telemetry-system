@@ -79,7 +79,7 @@ void sd_card_format(void)
 {
     FRESULT fres;
 
-    ULOG_DEBUG("Start formatting SD card\n");
+    ULOG_DEBUG("\nStart formatting SD card\n");
 
     BSP_SD_DeInit();
     BSP_SD_Init();
@@ -194,7 +194,7 @@ void sd_card_info(void)
     HAL_SD_GetCardCID(&hsd, &CID);
     HAL_SD_GetCardStatus(&hsd, &card_status);
 
-    ULOG_INFO("Manufacturer\t\t-> %s\n", _manID_to_str (CID.ManufacturerID));
+    ULOG_INFO("\nManufacturer\t\t-> %s\n", _manID_to_str (CID.ManufacturerID));
     ULOG_INFO("Speed Class\t\t-> %s\n", _speed_class_to_str (card_status.SpeedClass));
     ULOG_INFO("Serial Number\t\t-> %04X\n", CID.ProdSN);
     ULOG_DEBUG("Block Size\t\t-> %dbyte\n", hsd.SdCard.BlockSize);

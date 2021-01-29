@@ -42,7 +42,6 @@ CLI_Result_t sd_cli_format(void)
 
     if (sd->initialized)
     {
-        CLI_PRINTF("\n")
         sd_card_format();
     }
     else
@@ -59,7 +58,6 @@ CLI_Result_t sd_cli_info(void)
 
     if (sd->initialized)
     {
-        CLI_PRINTF("\n")
         sd_card_info();
     }
     else
@@ -73,7 +71,7 @@ CLI_Result_t sd_cli_info(void)
 
 FRESULT scan_files (char* path)
 {
-    CLI_PRINTF("List of files in the directory: %s\n\n", path);
+    CLI_PRINTF("\nList of files in the directory: %s\n\n", path);
     FRESULT res;
     SD_Card_State_t *sd_state = sd_card_get_state();
 
@@ -85,15 +83,18 @@ FRESULT scan_files (char* path)
             res = f_readdir(&sd_state->dir, &sd_state->finfo); /* Read a directory item */
             if (res != FR_OK || sd_state->finfo.fname[0] == 0)
                 break;
-            if (sd_state->finfo.fattrib & AM_DIR)  /* It is a directory */
+
+            if (!(sd_state->finfo.fattrib & AM_HID)) /* skip hidden file & directory */
             {
-                CLI_PRINTF("\tDIR\t\t%s\n", sd_state->finfo.fname);
+                if (sd_state->finfo.fattrib & AM_DIR)  /* It is a directory */
+                {
+                    CLI_PRINTF("\tDIR\t\t%s\n", sd_state->finfo.fname);
+                } else
+                {
+                    CLI_PRINTF(" %10lu bytes\t%s\n", sd_state->finfo.fsize, sd_state->finfo.fname);
+                }
+                HAL_Delay(10);
             }
-            else
-            {
-                CLI_PRINTF(" %10lu bytes\t%s\n", sd_state->finfo.fsize, sd_state->finfo.fname);
-            }
-            HAL_Delay(10);
         }
         f_closedir(&sd_state->dir);
     }
@@ -113,7 +114,6 @@ CLI_Result_t sd_cli_list_dir(void)
     }
     FRESULT res;
 
-    CLI_PRINTF("\n")
 
     char *arg = cli_get_arg(0);
 
