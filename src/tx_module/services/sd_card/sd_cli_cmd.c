@@ -7,6 +7,7 @@ static CLI_Result_t sd_cli_format(void);
 static CLI_Result_t sd_cli_info(void);
 static CLI_Result_t sd_cli_list_dir(void);
 static CLI_Result_t sd_cli_cat_file(void);
+static CLI_Result_t sd_cli_log(void);
 
 static char readBuff[512] = {0};
 
@@ -26,6 +27,7 @@ uint8_t sd_card_cli_cmd_init(void)
     res = cli_add_new_cmd("sd_info", sd_cli_info, 1, 0, "Info SD card");
     res = cli_add_new_cmd("sd_list", sd_cli_list_dir, 1, 0, "List dir in the SD card");
     res = cli_add_new_cmd("sd_cat", sd_cli_cat_file, 1, 0, "Display file on screen");
+    res = cli_add_new_cmd("sd_log", sd_cli_log, 1, 0, "Enable/Disable save log to SD card");
 
     return res;
 }
@@ -40,9 +42,13 @@ CLI_Result_t sd_cli_format(void)
 {
     SD_Card_State_t *sd = sd_card_get_state();
 
-    if (sd->initialized)
+    if (sd->insert)
     {
-        sd_card_format();
+        sd->mount_fs = false;
+        CLI_PRINTF("\nSD format\n");
+
+        if (FR_OK == sd_card_format())
+            sd->mount_fs = true;
     }
     else
     {
@@ -58,6 +64,7 @@ CLI_Result_t sd_cli_info(void)
 
     if (sd->initialized)
     {
+        CLI_PRINTF("\nSD info\n");
         sd_card_info();
     }
     else
@@ -106,6 +113,7 @@ CLI_Result_t sd_cli_list_dir(void)
 {
 
     SD_Card_State_t *sd = sd_card_get_state();
+    //osMutexTake(sd->lock_file, osWaitForever);
 
     if (!sd->initialized)
     {
@@ -127,16 +135,19 @@ CLI_Result_t sd_cli_list_dir(void)
     {
         CLI_PRINTF("\nDirectory not found\n");
     }
+    //osMutexRelease(sd->lock_file);
 
     return CLI_OK;
 }
 
+
 CLI_Result_t sd_cli_cat_file(void)
 {
+    static FIL fd;
 
-    SD_Card_State_t *sd = sd_card_get_state();
+    SD_Card_State_t *sd_state = sd_card_get_state();
 
-    if (!sd->initialized)
+    if (!sd_state->initialized)
     {
         _sd_not_initialized();
         return CLI_OK;
@@ -147,29 +158,38 @@ CLI_Result_t sd_cli_cat_file(void)
 
     char *arg = cli_get_arg(0);
 
-    SD_Card_State_t *sd_state = sd_card_get_state();
+    osMutexTake(sd_state->lock_file, osWaitForever);
 
-    res = f_open(&sd_state->fd, arg, FA_READ);
+    res = f_open(&fd, arg, FA_READ);
 
     if (res != FR_OK)
     {
-        CLI_PRINTF("\nError open file\n");
+        CLI_PRINTF("\nError open file: %d\n", res);
+        osMutexRelease(sd_state->lock_file);
         return CLI_OK;
     }
 
     memset(readBuff, 0, sizeof(readBuff));
 
     uint16_t lines;
-    for (lines = 0; (f_eof(&sd_state->fd) == 0); lines++)
+    for (lines = 0; (f_eof(&fd) == 0); lines++)
     {
-        f_gets((char*)readBuff, sizeof(readBuff), &sd_state->fd);
+        f_gets((char*)readBuff, sizeof(readBuff), &fd);
         CLI_PRINTF("%s", readBuff);
         HAL_Delay(50);
     }
     CLI_PRINTF("\nRead %d lines\n", lines);
 
 
-    f_close(&sd_state->fd);
+    f_close(&fd);
+    osMutexRelease(sd_state->lock_file);
+
+    return CLI_OK;
+}
+
+
+CLI_Result_t sd_cli_log(void)
+{
 
     return CLI_OK;
 }

@@ -47,7 +47,7 @@
 
 
 
-#include "../ff.h"
+#include "ff.h"
 
 
 #if _FS_REENTRANT
@@ -107,7 +107,7 @@ int ff_req_grant (	/* 1:Got a grant to access the volume, 0:Could not get a gran
 {
   int ret = 0;
 
-  if(osSemaphoreWait(sobj, _FS_TIMEOUT) == osOK)
+  if(osSemaphoreTake(sobj, _FS_TIMEOUT) == osOK)
   {
     ret = 1;
   }

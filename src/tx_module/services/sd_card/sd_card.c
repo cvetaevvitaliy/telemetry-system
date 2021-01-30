@@ -7,6 +7,22 @@ SD_Card_State_t SD_Card_State = {0};
 
 extern SD_HandleTypeDef hsd;
 
+void _sd_card_ver(void)
+{
+    if (f_open(&SD_Card_State.fd, "version.txt", FA_CREATE_ALWAYS | FA_WRITE) == FR_OK)
+    {
+        f_printf(&SD_Card_State.fd, "%s\n", BUILD_NAME);
+        f_printf(&SD_Card_State.fd, "SW  ver: v%s.%s.%s\n", MINOR, MAJOR, PATCH);
+        f_printf(&SD_Card_State.fd, "CLI ver: %s\n", _TERM_VER_);
+        f_printf(&SD_Card_State.fd, "MCU: %s\n", MCU);
+        f_printf(&SD_Card_State.fd, "Build Date: %s %s Where: %s\n", __DATE__, __TIME__, _WHERE_BUILD);
+        f_printf(&SD_Card_State.fd, "Branch: %s GIT-HASH: %s\n", GIT_BRANCH, GIT_HASH);
+        f_sync(&SD_Card_State.fd);
+        f_close(&SD_Card_State.fd);
+    }
+
+}
+
 
 void sd_card_init(void)
 {
@@ -16,49 +32,57 @@ void sd_card_init(void)
 
     if (!HAL_GPIO_ReadPin(SD_PRESET_GPIO_Port, SD_PRESET_Pin))
     {
+
         SD_Card_State.insert = true;
 
-        FRESULT fres;
-
-        if (BSP_SD_Init() == MSD_OK)
+        if (!SD_Card_State.sd_not_fmt)
         {
-            ULOG_INFO("init SD card succeed!\n");
-            fres = f_mount(&SD_Card_State.fatfs, "", 1);
 
-            HAL_SD_ConfigWideBusOperation(&hsd, SDIO_BUS_WIDE_4B);
+            FRESULT fres;
 
-            if (fres != FR_OK)
+            osMutexTake(SD_Card_State.lock_file, osWaitForever);
+
+            if (BSP_SD_Init() == MSD_OK)
             {
-                ULOG_INFO("SD card is not formatted\n");
-            } else
-            {
-                ULOG_INFO("Mount SD card successfully\n");
-                sd_card_info();
-                SD_Card_State.initialized = true;
+                ULOG_INFO("Trying to init SD card\n");
+                fres = f_mount(&SD_Card_State.fatfs, "", 1);
 
-                if(f_open(&SD_Card_State.fd, "version.txt", FA_CREATE_ALWAYS | FA_WRITE) == FR_OK)
+                HAL_SD_ConfigWideBusOperation(&hsd, SDIO_BUS_WIDE_4B);
+
+                if (fres != FR_OK)
                 {
-                    f_printf(&SD_Card_State.fd, "%s\n", BUILD_NAME);
-                    f_printf(&SD_Card_State.fd, "SW  ver: v%s.%s.%s\n", MINOR, MAJOR, PATCH);
-                    f_printf(&SD_Card_State.fd, "CLI ver: %s\n", _TERM_VER_);
-                    f_printf(&SD_Card_State.fd, "MCU: %s\n", MCU);
-                    f_printf(&SD_Card_State.fd, "Build Date: %s %s Where: %s\n", __DATE__, __TIME__, _WHERE_BUILD);
-                    f_printf(&SD_Card_State.fd, "Branch: %s GIT-HASH: %s\n", GIT_BRANCH, GIT_HASH);
-                    f_sync(&SD_Card_State.fd);
-                    f_close(&SD_Card_State.fd);
+                    ULOG_INFO("SD card is not formatted, please format SD on PC: %s\n", fres == FR_DISK_ERR ? "FR_DISK_ERR" : 0);
+                    SD_Card_State.mount_fs = false;
+                    SD_Card_State.sd_not_fmt = true;
+                    osMutexRelease(SD_Card_State.lock_file);
+                    return;
                 }
+                else
+                {
+                    ULOG_INFO("Init SD card & mount partition successfully\n");
+                    sd_card_info();
+                    SD_Card_State.initialized = true;
+                    SD_Card_State.mount_fs = true;
+                    _sd_card_ver();
+                }
+
             }
+            else
+            {
+                SD_Card_State.initialized = false;
+                SD_Card_State.mount_fs = false;
+                ULOG_ERROR("Failed init SD card\n");
+            }
+
+            osMutexRelease(SD_Card_State.lock_file);
         }
-        else
-        {
-            SD_Card_State.initialized = false;
-            ULOG_ERROR("Failed init SD card\n");
-        }
+
     }
     else
     {
         SD_Card_State.initialized = false;
         SD_Card_State.insert = false;
+        SD_Card_State.mount_fs = false;
         ULOG_INFO("SD card not inserted\n");
     }
 
@@ -70,16 +94,18 @@ void sd_card_init(void)
 void sd_card_deinit(void)
 {
     SD_Card_State.initialized = false;
+    SD_Card_State.mount_fs = false;
     BSP_SD_DeInit();
     sd_card_enable_pin_detect(true);
 }
 
 
-void sd_card_format(void)
+FRESULT sd_card_format(void)
 {
     FRESULT fres;
+    osMutexTake(SD_Card_State.lock_file, osWaitForever);
 
-    ULOG_DEBUG("\nStart formatting SD card\n");
+    ULOG_INFO("Start formatting SD card\n");
 
     BSP_SD_DeInit();
     BSP_SD_Init();
@@ -87,13 +113,19 @@ void sd_card_format(void)
     f_mount(&SD_Card_State.fatfs, "", 1);
     HAL_SD_ConfigWideBusOperation(&hsd, SDIO_BUS_WIDE_4B);
     fres = f_mkfs("", FM_FAT32, 0, SD_Card_State.work, sizeof SD_Card_State.work);
-    if (fres)
+    if (fres != FR_OK)
     {
         ULOG_ERROR("Formatting fall, error: %d\n ", fres);
-    } else
+        osMutexRelease(SD_Card_State.lock_file);
+        return fres;
+    }
+    else
     {
         ULOG_INFO("Formatting OK\n ");
+        _sd_card_ver();
     }
+    osMutexRelease(SD_Card_State.lock_file);
+    return FR_OK;
 
 }
 
@@ -188,18 +220,25 @@ char *_speed_class_to_str(uint8_t class)
 
 void sd_card_info(void)
 {
+    uint32_t fre_clust;
+
     HAL_SD_CardCIDTypeDef CID;
     HAL_SD_CardStatusTypeDef card_status;
     BSP_SD_GetCardInfo(&hsd.SdCard);
     HAL_SD_GetCardCID(&hsd, &CID);
     HAL_SD_GetCardStatus(&hsd, &card_status);
 
-    ULOG_INFO("\nManufacturer\t\t-> %s\n", _manID_to_str (CID.ManufacturerID));
+    f_getfree("/", &fre_clust, &SD_Card_State.sd_fs);
+    SD_Card_State.mem_free = (fre_clust * SD_Card_State.sd_fs->csize) / 2;
+    SD_Card_State.mem_total = ((SD_Card_State.sd_fs->n_fatent - 2) * SD_Card_State.sd_fs->csize) / 2;
+
+    ULOG_INFO("Manufacturer\t\t-> %s\n", _manID_to_str (CID.ManufacturerID));
     ULOG_INFO("Speed Class\t\t-> %s\n", _speed_class_to_str (card_status.SpeedClass));
     ULOG_INFO("Serial Number\t\t-> %04X\n", CID.ProdSN);
-    ULOG_DEBUG("Block Size\t\t-> %dbyte\n", hsd.SdCard.BlockSize);
     ULOG_INFO("Card Capacity\t\t-> %uGB\n",
                (uint32_t) ((((float) hsd.SdCard.BlockNbr / 1000) * (float) hsd.SdCard.BlockSize / 1000000) + 0.5));
+
+    ULOG_INFO("Mem available\t\t-> %lu KB\n", SD_Card_State.mem_free);
 
 }
 
@@ -210,13 +249,14 @@ void sd_card_insert_event(void)
     if (SD_Card_State.insert)
     {
         SD_Card_State.insert = false;
+        SD_Card_State.sd_not_fmt = false;
     }
     else
     {
         SD_Card_State.insert = true;
     }
 
-    ULOG_INFO("%s\n", SD_Card_State.insert ? "SD inserted" : "SD removed");
+    ULOG_INFO("%s\n", SD_Card_State.insert ? "SD inserted" : "SD removed\nPlease reboot after insert SD");
 
 }
 

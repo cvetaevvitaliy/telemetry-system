@@ -28,8 +28,6 @@ ADC_HandleTypeDef hadc1;
 
 I2C_HandleTypeDef hi2c1;
 
-SD_HandleTypeDef hsd;
-
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi3;
 
@@ -43,6 +41,10 @@ DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart2_rx;
 DMA_HandleTypeDef hdma_usart2_tx;
+
+SD_HandleTypeDef hsd;
+DMA_HandleTypeDef hdma_sdio_rx;
+DMA_HandleTypeDef hdma_sdio_tx;
 
 RTC_HandleTypeDef hrtc;
 
@@ -389,18 +391,26 @@ void MX_DMA_Init(void)
     __HAL_RCC_DMA2_CLK_ENABLE();
 
     /* DMA interrupt init */
-    /* DMA1_Stream5_IRQn interrupt configuration */
+    /* DMA1_Stream5_IRQn interrupt configuration for UART2 */
     HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
-    /* DMA1_Stream6_IRQn interrupt configuration */
+    /* DMA1_Stream6_IRQn interrupt configuration for UART2 */
     HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
-    /* DMA2_Stream2_IRQn interrupt configuration */
+
+    /* DMA2_Stream2_IRQn interrupt configuration for UART1 */
     HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
-    /* DMA2_Stream7_IRQn interrupt configuration */
+    /* DMA2_Stream7_IRQn interrupt configuration for UART1 */
     HAL_NVIC_SetPriority(DMA2_Stream7_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
+
+    /* DMA2_Stream3_IRQn interrupt configuration for SDIO interface */
+    HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
+    /* DMA2_Stream6_IRQn interrupt configuration for SDIO interface */
+    HAL_NVIC_SetPriority(DMA2_Stream6_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(DMA2_Stream6_IRQn);
 
 }
 
@@ -520,7 +530,7 @@ static void TIMER10_Init(void)
     htim10.Instance = TIM10;
     htim10.Init.Prescaler = (uint16_t) (SystemCoreClock / 100) - 1;
     htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim10.Init.Period = 100;
+    htim10.Init.Period = 50;
     htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     if (HAL_TIM_Base_Init(&htim10) != HAL_OK) {
         _Error_Handler(__FILE__, __LINE__);
