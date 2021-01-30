@@ -23,6 +23,7 @@
 #include "cmsis_os.h"
 #include "minmea.h"
 #include "cli.h"
+#include "sd_logger.h"
 
 #define GPS_UART_BUFFER     160
 
@@ -51,6 +52,14 @@ void gps_service_init(void)
     HAL_UART_Receive_DMA(&huart1,&ch, 1);
 }
 
+void gps_service_deinit(void)
+{
+    HAL_NVIC_DisableIRQ(DMA1_Stream2_IRQn);
+    HAL_NVIC_DisableIRQ(DMA1_Stream7_IRQn);
+    HAL_UART_MspDeInit(&huart1);
+
+}
+
 
 void gps_service_put_char_handle(void)
 {
@@ -60,7 +69,7 @@ void gps_service_put_char_handle(void)
 
     if (ch == '\n' && GPS_State.find_header == true)
     {
-        uint8_t  buffer[81] = {0};
+        static uint8_t  buffer[81] = {0};
         memcpy(buffer, GPS_State.gps_buffer, GPS_State.in_ptr);
 
         GPS_State.data_ready = false;
@@ -86,7 +95,7 @@ void _gps_parser(uint8_t *data)
 
     switch (minmea_sentence_id(data, false)) {
 
-        case MINMEA_INVALID: ULOG_ERROR("MINMEA_INVALID\n");
+        case MINMEA_INVALID: ULOG_ERROR("MINMEA_INVALID\n[MESSAGE] %s\n",data);
             break;
 
         case MINMEA_UNKNOWN:
@@ -155,17 +164,17 @@ GPS_Data_t* gps_service_execute(void)
 {
     if (GPS_State.data_ready == true) {
 
-        ULOG_TRACE("Latitude: %f\n", GPS_Data.latitude);
-        ULOG_TRACE("Longitude: %f\n", GPS_Data.longitude);
-        ULOG_TRACE("GPS speed: %.3f\n", GPS_Data.gps_speed);
-        ULOG_TRACE("GPS fix quality: %d\n", GPS_Data.fix_quality);
-        ULOG_TRACE("GPS fix type: %d\n", GPS_Data.fix_type);
-        ULOG_TRACE("GPS sats: %d\n", GPS_Data.sats);
-        ULOG_TRACE("GPS hdop: %.2f\n", GPS_Data.hdop);
-        ULOG_TRACE("GPS vdop: %.2f\n", GPS_Data.vdop);
-        ULOG_TRACE("GPS pdop: %.2f\n", GPS_Data.pdop);
-        ULOG_TRACE("GPS Time: %d:%d:%d\n", GPS_Data.time.hours, GPS_Data.time.minutes, GPS_Data.time.seconds);
-        ULOG_TRACE("GPS Date: %02d.%02d.%d\n", GPS_Data.date.day, GPS_Data.date.month, GPS_Data.date.year);
+        GPS_LOGGER("Latitude: %f\n", GPS_Data.latitude);
+        GPS_LOGGER("Longitude: %f\n", GPS_Data.longitude);
+        GPS_LOGGER("GPS speed: %.3f\n", GPS_Data.gps_speed);
+        GPS_LOGGER("GPS fix quality: %d\n", GPS_Data.fix_quality);
+        GPS_LOGGER("GPS fix type: %d\n", GPS_Data.fix_type);
+        GPS_LOGGER("GPS sats: %d\n", GPS_Data.sats);
+        GPS_LOGGER("GPS hdop: %.2f\n", GPS_Data.hdop);
+        GPS_LOGGER("GPS vdop: %.2f\n", GPS_Data.vdop);
+        GPS_LOGGER("GPS pdop: %.2f\n", GPS_Data.pdop);
+        GPS_LOGGER("GPS Time: %d:%02d:%02d\n", GPS_Data.time.hours, GPS_Data.time.minutes, GPS_Data.time.seconds);
+        GPS_LOGGER("GPS Date: %02d.%02d.%d\n", GPS_Data.date.day, GPS_Data.date.month, GPS_Data.date.year);
 
         GPS_State.data_ready = false;
         return &GPS_Data;

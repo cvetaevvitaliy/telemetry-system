@@ -252,7 +252,8 @@ foreach(TYPE ${SELECT_BUILD})
                 src/components/dfu/dfu.c
 
                 src/tx_module/services/sd_card/sd_card.c
-                src/tx_module/services/sd_card/sd_cli_cmd.c)
+                src/tx_module/services/sd_card/sd_cli_cmd.c
+                src/tx_module/services/sd_card/sd_logger.c)
 
         SET(INC_FILE
                 ${FAT_FS_INC}

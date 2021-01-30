@@ -28,6 +28,7 @@
 #include "dfu.h"
 #include "sd_card.h"
 #include "sd_cli_cmd.h"
+#include "sd_logger.h"
 
 #define QUEUE_SIZE                      (10)
 
@@ -55,23 +56,27 @@ int main(void)
     cli_init();
     dfu_add_cli_cmd();
 
-    osThreadDef(CLI_Task, cli_task, osPriorityLow, 0, 128);
+    osThreadDef(CLI_Task, cli_task, osPriorityLow, 0, 512);
     cli_task_handle = osThreadCreate(osThread(CLI_Task), NULL);
 
     osThreadDef(RangeTest_Task, range_test_task, osPriorityNormal, 0, 128);
     range_test_task_handle = osThreadCreate(osThread(RangeTest_Task), NULL);
 
-    osThreadDef(GPS_Task, gps_task, osPriorityHigh, 0, 256);
+    osThreadDef(GPS_Task, gps_task, osPriorityHigh, 0, 512);
     gps_task_handle = osThreadCreate(osThread(GPS_Task), NULL);
 
-    osThreadDef(transceiver_task, transceiver_task, osPriorityHigh, 0, 128);
+    osThreadDef(transceiver_task, transceiver_task, osPriorityHigh, 0, 512);
     transceiver_task_handle = osThreadCreate(osThread(transceiver_task), NULL);
 
-    osThreadDef(sd_card_task, sd_card_task, osPriorityHigh, 0, 128);
+    osThreadDef(sd_card_task, sd_card_task, osPriorityHigh, 0, 512);
     sd_card_task_handle = osThreadCreate(osThread(sd_card_task), NULL);
 
     gps_pool = osPoolCreate(osPool(gps_pool));
     MsgBox_GPS = osMessageCreate(osMessageQ(MsgBox_GPS), NULL);
+
+    SD_Card_State_t *sd_state = sd_card_get_state();
+    sd_state->lock_file =  osMutexCreate(sd_state->lock_file);
+
     HAL_Delay(3000); // this delay for debug, for init USB
 
     osKernelStart();
@@ -92,7 +97,6 @@ void cli_task(void const * argument)
     while (1)
     {
         cli_loop_service();
-
         osDelay(100);
     }
 }
@@ -131,7 +135,7 @@ void gps_task(void const *argument)
             osMessagePut(MsgBox_GPS, (uint32_t)queue, osWaitForever);
         }
 
-        osDelay(100);
+        osDelay(250);
     }
 }
 
@@ -159,20 +163,34 @@ void transceiver_task(void const * argument)
 
 void sd_card_task(void const * argument)
 {
+    osDelay(2000);
     sd_card_init();
     sd_card_cli_cmd_init();
 
     SD_Card_State_t *sd_state = sd_card_get_state();
 
+    if (sd_state->mount_fs)
+    {
+        ULOG_SUBSCRIBE(sd_logger_sys, ULOG_DEBUG_LEVEL);
+        ULOG_INFO("SD Logger init\n");
+        sd_state->log_enable = true;
+    }
+
+
     while (1)
     {
         if (sd_state->initialized == false && sd_state->insert == true)
         {
-            osDelay(200);
+            osDelay(500); // wait for init SD card after power on
             sd_card_init();
+            osDelay(200);
+            ULOG_SUBSCRIBE(sd_logger_sys, ULOG_DEBUG_LEVEL);
+            ULOG_INFO("SD Logger init\n");
         }
         if (sd_state->initialized == true && sd_state->insert == false)
         {
+            sd_state->log_enable = false;
+            ULOG_UNSUBSCRIBE(sd_logger_sys);
             sd_card_deinit();
         }
 
