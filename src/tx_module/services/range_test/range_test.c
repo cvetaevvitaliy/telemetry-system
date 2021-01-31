@@ -1,3 +1,22 @@
+/*
+ * This file is part of "Telemetry system" project.
+ *
+ * "Telemetry system" are free software. You can redistribute
+ * this software and/or modify this software under the terms of the
+ * GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * "Telemetry system" are distributed in the hope that they
+ * will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
 #include "range_test.h"
 #include "stm32f4xx_hal.h"
 #include "radio.h"
@@ -15,7 +34,7 @@
 #define LORA_SYMBOL_TIMEOUT                         5         // Symbols
 #define LORA_FIX_LENGTH_PAYLOAD_ON                  false
 #define LORA_IQ_INVERSION_ON                        false
-#define RX_TIMEOUT_VALUE                            1000
+#define RX_TIMEOUT_VALUE                            250
 #define TX_TIMEOUT_VALUE                            150
 #define BUFFER_SIZE                                 64 // Define the payload size here
 
@@ -31,9 +50,11 @@ typedef enum
     RX_ERROR,
     TX,
     TX_TIMEOUT,
+    TX_DONE,
+    IDLE,
 }States_t;
 
-States_t State = LOWPOWER;
+States_t State = TX;
 
 int8_t RssiValue = 0;
 int8_t SnrValue = 0;
@@ -99,17 +120,29 @@ void range_test_init(void)
 void range_test_execute(void)
 {
     static uint64_t i = 0;
-    i++;
-    sprintf(Buffer, "%d PING ", i);
-    Radio.Send(Buffer, BUFFER_SIZE);
-    HAL_GPIO_TogglePin(LED_2_GPIO_Port, LED_2_Pin);
+    if (State == TX)
+    {
+        State = IDLE;
+        ULOG_DEBUG("Send\n");
+        sprintf(Buffer, "%d PING ", i);
+        i++;
+        Radio.Send(Buffer, BUFFER_SIZE);
+        HAL_GPIO_TogglePin(LED_2_GPIO_Port, LED_2_Pin);
+    }
+
+    if (State == TX_DONE)
+    {
+        State = IDLE;
+        Radio.Rx(RX_TIMEOUT_VALUE);
+    }
+
 
 }
 
 void RangeTest_OnTxDone(void )
 {
-
-    State = RX;
+    ULOG_DEBUG("TxDone\n");
+    State = TX_DONE;
 }
 
 
@@ -119,7 +152,7 @@ void RangeTest_OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t sn
     memcpy( Buffer, payload, size );
     RssiValue = rssi;
     SnrValue = snr;
-    State = RX;
+    State = TX;
 
     ULOG_DEBUG("RSSI: %ddBm\n",RssiValue);
     ULOG_DEBUG("SNR: %ddb\n",SnrValue);
@@ -128,15 +161,12 @@ void RangeTest_OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t sn
 
 void RangeTest_OnTxTimeout(void )
 {
-    Radio.Sleep( );
-    State = TX_TIMEOUT;
+    State = TX_DONE;
 }
 
 void RangeTest_OnRxTimeout(void )
 {
-    //HAL_GPIO_TogglePin(LED_2_GPIO_Port, LED_2_Pin);
-    State = RX_TIMEOUT;
-    State = RX;
+    State = TX;
 }
 
 void RangeTest_OnRxError(void )

@@ -8,7 +8,7 @@
 
 
 #define RF_FREQUENCY                                868000000 // Hz
-#define TX_OUTPUT_POWER                             0        // dBm
+#define TX_OUTPUT_POWER                             20        // dBm
 #define LORA_BANDWIDTH                              0         // [0: 125 kHz,//  1: 250 kHz,//  2: 500 kHz,//  3: Reserved]
 #define LORA_SPREADING_FACTOR                       7         // [SF7..SF12]
 #define LORA_CODINGRATE                             1         // [1: 4/5,//  2: 4/6,//  3: 4/7,//  4: 4/8]
@@ -33,7 +33,7 @@ typedef enum
     TX_TIMEOUT,
 }States_t;
 
-States_t State = LOWPOWER;
+States_t State = RX;
 
 int8_t RssiValue = 0;
 int8_t SnrValue = 0;
@@ -90,14 +90,14 @@ void range_test_init(void)
     Radio.SetTxConfig( MODEM_LORA, TX_OUTPUT_POWER, 0, LORA_BANDWIDTH,
                        LORA_SPREADING_FACTOR, LORA_CODINGRATE,
                        LORA_PREAMBLE_LENGTH, LORA_FIX_LENGTH_PAYLOAD_ON,
-                       true, 0, 0, LORA_IQ_INVERSION_ON, 100 );
+                       true, 0, 0, LORA_IQ_INVERSION_ON, 0 );
 
     Radio.SetRxConfig( MODEM_LORA, LORA_BANDWIDTH, LORA_SPREADING_FACTOR,
                        LORA_CODINGRATE, 0, LORA_PREAMBLE_LENGTH,
                        LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
                        0, true, 0, 0, LORA_IQ_INVERSION_ON, true );
 
-    Radio.Rx( RX_TIMEOUT_VALUE );
+    Radio.Rx( 100 );
 
     delay = HAL_GetTick();
 
@@ -129,6 +129,19 @@ void range_test_execute(void)
     ssd1306_Draw_String(str, 0, 20, &Font_8x10);
     sprintf(str, "%s           ", Buffer);
     ssd1306_Draw_String(str, 0, 30, &Font_8x10);
+
+
+    static uint32_t i = 0;
+    if (!HAL_GPIO_ReadPin(BUTTON_LEFT_GPIO_Port, BUTTON_LEFT_Pin))
+    {
+        i++;
+        sprintf(Buffer, "%d PING ", i);
+        Radio.Send(Buffer, BUFFER_SIZE);
+        Radio.Rx( RX_TIMEOUT_VALUE );
+        sprintf(str, "%s           ", Buffer);
+        ssd1306_Draw_String(str, 0, 50, &Font_8x10);
+    }
+
     ssd1306_UpdateScreen();
 
 
@@ -136,8 +149,9 @@ void range_test_execute(void)
 
 void RangeTest_OnTxDone(void )
 {
-    Radio.Sleep( );
-    State = TX;
+    //Radio.Sleep();
+    LOG_INFO("TxDone\n");
+    Radio.Rx( RX_TIMEOUT_VALUE );
 }
 
 
@@ -156,15 +170,17 @@ void RangeTest_OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t sn
 
 void RangeTest_OnTxTimeout(void )
 {
-    Radio.Sleep( );
-    State = TX_TIMEOUT;
+    //Radio.Sleep( );
+    LOG_INFO("TxTimeout\n");
+    //Radio.Rx( RX_TIMEOUT_VALUE );
 }
 
 void RangeTest_OnRxTimeout(void )
 {
-    //HAL_GPIO_TogglePin(LED_2_GPIO_Port, LED_2_Pin);
+    LOG_INFO("RxTimeout\n");
     State = RX_TIMEOUT;
     State = RX;
+    //Radio.Rx( RX_TIMEOUT_VALUE );
 }
 
 void RangeTest_OnRxError(void )

@@ -367,6 +367,10 @@ uint8_t SX1276Read( uint8_t addr );
  */
 void SX1276SetMaxPayloadLength( RadioModems_t modem, uint8_t max );
 
-void SX1276OnTimeoutIrq( void );
+
+/*!
+ * \brief Tx & Rx timeout timer callback
+ */
+void SX1276OnTimeoutIrq(void);
 
 #endif // __SX1276_H__

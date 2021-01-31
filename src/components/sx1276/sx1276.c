@@ -83,19 +83,6 @@ void SX1276ReadFifo( uint8_t *buffer, uint8_t size );
  */
 void SX1276SetOpMode( uint8_t opMode );
 
-/*
- * SX1276 DIO IRQ callback functions prototype
- */
-
-
-/*!
- * \brief Tx & Rx timeout timer callback
- */
-void SX1276OnTimeoutIrq( void );
-
-/*
- * Private global constants
- */
 
 /*!
  * Radio hardware registers initialization

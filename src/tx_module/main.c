@@ -104,6 +104,7 @@ void cli_task(void const * argument)
 
 void range_test_task(void const * argument)
 {
+    osDelay(2000);
     range_test_init();
 
     while (1)

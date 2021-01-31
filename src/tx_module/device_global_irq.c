@@ -1,3 +1,22 @@
+/*
+ * This file is part of "Telemetry system" project.
+ *
+ * "Telemetry system" are free software. You can redistribute
+ * this software and/or modify this software under the terms of the
+ * GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * "Telemetry system" are distributed in the hope that they
+ * will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
 #include "stm32f4xx.h"
 #include "radio.h"
 #include "sx1276.h"
@@ -21,16 +40,16 @@ extern DMA_HandleTypeDef hdma_usart2_tx;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if(htim->Instance == TIM11 && htim->Instance->CR1 == 1) {
-        SX1276OnTimeoutIrq();
         HAL_TIM_Base_Stop(&htim11);
+        SX1276OnTimeoutIrq();
     }
     else if(htim->Instance == TIM13 && htim->Instance->CR1 == 1) {
-        SX1276OnTimeoutIrq();
         HAL_TIM_Base_Stop(&htim13);
+        SX1276OnTimeoutIrq();
     }
     else if(htim->Instance == TIM14 && htim->Instance->CR1 == 1) {
-        SX1276OnTimeoutIrq();
         HAL_TIM_Base_Stop(&htim14);
+        SX1276OnTimeoutIrq();
     }
     else if(htim->Instance == TIM10 && htim->Instance->CR1 == 1) {
         CDC_SEND_BUFF(); // for send CLI buff

@@ -1,3 +1,22 @@
+/*
+ * This file is part of "Telemetry system" project.
+ *
+ * "Telemetry system" are free software. You can redistribute
+ * this software and/or modify this software under the terms of the
+ * GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * "Telemetry system" are distributed in the hope that they
+ * will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.
+ *
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
 #include "radio.h"
 #include "sx1276.h"
 #include "sx1276-board.h"
@@ -245,11 +264,12 @@ TIM_HandleTypeDef htim14;
  * \param [IN] obj          Structure containing the timer object parameters
  * \param [IN] callback     Function callback called at the end of the timeout
  */
+#include "cli.h"
 void TimerInit( TimerEvent_t *timer)
 {
     if (timer->id == TIMER_TxTimeout) {
         htim11.Instance = TIM11;
-        htim11.Init.Prescaler = (uint16_t) (SystemCoreClock / 100) - 1;
+        htim11.Init.Prescaler = (uint16_t)((SystemCoreClock / 10000) - 1);
         htim11.Init.CounterMode = TIM_COUNTERMODE_UP;
         htim11.Init.Period = 0;
         htim11.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -260,7 +280,7 @@ void TimerInit( TimerEvent_t *timer)
     else if (timer->id == TIMER_RxTimeout)
     {
         htim13.Instance = TIM13;
-        htim13.Init.Prescaler = (uint16_t) (SystemCoreClock / 100) - 1;
+        htim13.Init.Prescaler = (uint16_t)((SystemCoreClock / 20000) - 1); // Bus APB1 has prescaler SYSCLK / 2
         htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
         htim13.Init.Period = 0;
         htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -271,7 +291,7 @@ void TimerInit( TimerEvent_t *timer)
     else if (timer->id == TIMER_RxTimeoutSyncWord)
     {
         htim14.Instance = TIM14;
-        htim14.Init.Prescaler = (uint16_t) (SystemCoreClock / 100) - 1;
+        htim14.Init.Prescaler = (uint16_t)((SystemCoreClock / 20000) - 1); // Bus APB1 has prescaler SYSCLK / 2
         htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
         htim14.Init.Period = 0;
         htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -337,21 +357,21 @@ void TimerSetValue( TimerEvent_t *obj, uint32_t value )
     switch (obj->id) {
 
         case TIMER_TxTimeout:
-            htim11.Init.Period = (uint16_t) value - 1;
+            htim11.Init.Period = (uint16_t) value * 10 - 1;
             htim11.State = HAL_TIM_STATE_BUSY;
             TIM_Base_SetConfig(htim11.Instance, &htim11.Init);
             htim11.State = HAL_TIM_STATE_READY;
             break;
 
         case TIMER_RxTimeout:
-            htim13.Init.Period = (uint16_t) value - 1;
+            htim13.Init.Period = (uint16_t) value * 10 - 1;
             htim13.State = HAL_TIM_STATE_BUSY;
             TIM_Base_SetConfig(htim13.Instance, &htim13.Init);
             htim13.State = HAL_TIM_STATE_READY;
             break;
 
         case TIMER_RxTimeoutSyncWord:
-            htim14.Init.Period = (uint16_t) value - 1;
+            htim14.Init.Period = (uint16_t) value * 10 - 1;
             htim14.State = HAL_TIM_STATE_BUSY;
             TIM_Base_SetConfig(htim14.Instance, &htim14.Init);
             htim14.State = HAL_TIM_STATE_READY;

@@ -470,13 +470,6 @@ static void MX_GPIO_Init(void)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    /*Configure GPIO pins : E19_RST_Pin E19_TX_Pin E19_RX_Pin */
-    GPIO_InitStruct.Pin = E19_RST_Pin|E19_TX_Pin|E19_RX_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
     /*Configure GPIO pin : SPI3_INT_Pin */
     GPIO_InitStruct.Pin = SPI3_INT_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -528,9 +521,9 @@ void USB_Reset_GPIO(void)
 static void TIMER10_Init(void)
 {
     htim10.Instance = TIM10;
-    htim10.Init.Prescaler = (uint16_t) (SystemCoreClock / 100) - 1;
+    htim10.Init.Prescaler = (uint16_t) (SystemCoreClock / 10000) - 1;
     htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim10.Init.Period = 50;
+    htim10.Init.Period = 500;
     htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     if (HAL_TIM_Base_Init(&htim10) != HAL_OK) {
         _Error_Handler(__FILE__, __LINE__);
