@@ -260,7 +260,7 @@ void TimerInit( TimerEvent_t *timer)
     else if (timer->id == TIMER_RxTimeout)
     {
         htim13.Instance = TIM13;
-        htim13.Init.Prescaler = (uint16_t) (SystemCoreClock / 100) - 1;
+        htim13.Init.Prescaler = (uint16_t) (SystemCoreClock / 200) - 1;
         htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
         htim13.Init.Period = 0;
         htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -271,7 +271,7 @@ void TimerInit( TimerEvent_t *timer)
     else if (timer->id == TIMER_RxTimeoutSyncWord)
     {
         htim14.Instance = TIM14;
-        htim14.Init.Prescaler = (uint16_t) (SystemCoreClock / 100) - 1;
+        htim14.Init.Prescaler = (uint16_t) (SystemCoreClock / 200) - 1;
         htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
         htim14.Init.Period = 0;
         htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -337,6 +337,7 @@ void TimerSetValue( TimerEvent_t *obj, uint32_t value )
     switch (obj->id) {
 
         case TIMER_TxTimeout:
+            HAL_TIM_Base_Stop(&htim11);
             //__HAL_TIM_SET_COUNTER(&htim11, value - 1);
             htim11.Init.Period = (uint16_t) value - 1;
             htim11.State = HAL_TIM_STATE_BUSY;
@@ -345,6 +346,7 @@ void TimerSetValue( TimerEvent_t *obj, uint32_t value )
             break;
 
         case TIMER_RxTimeout:
+            HAL_TIM_Base_Stop(&htim13);
             htim13.Init.Period = (uint16_t) value - 1;
             htim13.State = HAL_TIM_STATE_BUSY;
             TIM_Base_SetConfig(htim13.Instance, &htim13.Init);
@@ -352,6 +354,7 @@ void TimerSetValue( TimerEvent_t *obj, uint32_t value )
             break;
 
         case TIMER_RxTimeoutSyncWord:
+            HAL_TIM_Base_Stop(&htim14);
             htim14.Init.Period = (uint16_t) value - 1;
             htim14.State = HAL_TIM_STATE_BUSY;
             TIM_Base_SetConfig(htim14.Instance, &htim14.Init);
