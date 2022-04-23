@@ -4,7 +4,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
 
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   build: # make sure build/ci work properly
